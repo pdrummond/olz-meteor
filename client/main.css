@@ -48,3 +48,14 @@
   border-radius: 5px;
   padding:30px;
 }
+
+.card-header-label {
+  color:gray;
+  font-size:12px;
+}
+
+.user-fullname-label {
+  color:#BABABA;
+    text-transform: uppercase;
+    font-weight:bold;
+}

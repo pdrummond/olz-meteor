@@ -1,6 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Component, PropTypes } from 'react';
 
+import { Cards } from '../api/cards.js';
+
 export default class FeedItem extends Component {
 
     deleteThisCard() {
@@ -20,7 +22,6 @@ export default class FeedItem extends Component {
                     type="checkbox"
                     readOnly
                     checked={this.props.card.status == 'closed'}
-                    onClick={this.toggleChecked.bind(this)}
                     />
                 <i className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{marginLeft:'10px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
 

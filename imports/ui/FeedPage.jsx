@@ -64,7 +64,7 @@ class FeedPage extends Component {
               </div>
               <div className="right menu">
                 <div className="item">
-                  <div className="ui teal button"><i className="plus icon"></i> Create</div>
+                  <a href="/card/create" className="ui teal button"><i className="plus icon"></i> Create</a>
                 </div>
               </div>
             </div>
