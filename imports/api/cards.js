@@ -12,9 +12,10 @@ if (Meteor.isServer) {
 
 Meteor.methods({
 
-    'cards.insert'(title, content) {
-        check(title, String)
+    'cards.insert'(title, content, type) {
+        check(title, String);
         check(content, String);
+        check(type, String);
 
         if (! Meteor.userId()) {
             throw new Meteor.Error('not-authenticated');
@@ -24,6 +25,7 @@ Meteor.methods({
         var cardId = Cards.insert({
             title,
             content,
+            type: (type || 'discussion'),
             createdAt: now,
             updatedAt: now,
             userId: Meteor.userId(),
@@ -49,8 +51,18 @@ Meteor.methods({
 });
 
 Cards.helpers = {
+
+    getUserProfileImage(users, card) {
+      let profileImage = '/images/user-placeholder.png';
+      var user = Meteor.users.findOne(card.userId);
+      if(user) {
+        profileImage = user.profileImage;
+      }
+      return profileImage;
+    },
+
     getCardTypeIconClassName(type) {
-        var typeClassName = 'discussion';
+        var typeClassName = 'comments';
         switch(type) {
             case 'discussion': typeClassName = 'comments'; break;
             case 'story': typeClassName = 'newspaper'; break;
@@ -73,7 +85,7 @@ Cards.helpers = {
     },
 
     getCardTypeIconColor(type) {
-        let color = 'black';
+        let color = '#BABABA';
         switch(type) {
             case 'discussion': color = '#026AA7'; break;
             case 'story': color = '#00BCD4'; break;

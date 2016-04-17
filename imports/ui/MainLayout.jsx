@@ -13,6 +13,7 @@ class MainLayout extends Component {
       return (<p>Loading...</p>);
     } else {
       console.log("currentUser:" + JSON.stringify(this.props.currentUser, null, 4));
+      console.log("users:" + JSON.stringify(this.props.users));
       return (
         <div>
           <div id="cover-image-wrapper">
@@ -63,6 +64,7 @@ export default createContainer(() => {
   var userDataHandle = Meteor.subscribe('userData');
   return {
     loading: !(userDataHandle.ready()),
-    currentUser: Meteor.user()
+    currentUser: Meteor.user(),
+    users: Meteor.users.find().fetch()
   };
 }, MainLayout);

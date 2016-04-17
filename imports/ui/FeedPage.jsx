@@ -17,7 +17,7 @@ class FeedPage extends Component {
   renderCards() {
     if(this.props.cards.length > 0) {
       return this.props.cards.map((card) => (
-        <FeedItem key={card._id} card={card}/>
+        <FeedItem users={this.props.users} key={card._id} card={card}/>
       ));
     } else {
       if(Meteor.userId()) {
@@ -70,11 +70,8 @@ class FeedPage extends Component {
             </div>
           </div>
           {this.renderSignUpMessage()}
-          <div className="feed-page ui segment">
-
-            <ul>
+          <div className="feed-page ui vertical segment">
               {this.renderCards()}
-            </ul>
           </div>
         </div>
       );
@@ -125,7 +122,7 @@ FeedPage.propTypes = {
   cards: PropTypes.array.isRequired
 };
 
-export default createContainer(() => {
+export default createContainer((props) => {
   var cardsHandle = Meteor.subscribe('cards');
   var data = {
     loading: !(cardsHandle.ready()),

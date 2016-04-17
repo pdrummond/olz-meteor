@@ -50,12 +50,26 @@
 }
 
 .card-header-label {
-  color:gray;
+  color:#BABABA;
   font-size:12px;
 }
 
 .user-fullname-label {
-  color:#BABABA;
+    color:gray;
     text-transform: uppercase;
     font-weight:bold;
+}
+
+.ProseMirror {
+  border: none;
+}
+
+#main-layout .ols-card {
+  border: 1px solid lightgray;
+  box-shadow: 2px 2px 10px 1px #E0E0E0;
+  margin-bottom:50px;
+}
+
+.ols-card .footer {
+  background-color:whitesmoke !important;
 }

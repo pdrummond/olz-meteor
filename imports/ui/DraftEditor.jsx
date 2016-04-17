@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import {Editor, EditorState, RichUtils} from 'draft-js';
 import {convertToRaw} from 'draft-js';
 
-export default class RichEditor extends React.Component {
+export default class DraftEditor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {editorState: EditorState.createEmpty()};
