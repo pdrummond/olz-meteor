@@ -28,7 +28,7 @@ export default class MessageItem extends Component {
         <div className="content">
           <div className="summary">
             <div className="card-header-label">
-              <i className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
+              <i title={this.props.card.type} style={{cursor:'pointer'}} onClick={this.handleTypeIconClicked.bind(this)} className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
               <span className="user-fullname-label">@{this.props.card.username}</span>
               <span style={{marginLeft:'5px'}} className="date">{moment(this.props.card.createdAt).fromNow()}</span>
                 <div className="ui icon top left pointing dropdown mini basic button right floated">
@@ -58,6 +58,18 @@ export default class MessageItem extends Component {
         </div>
       </div>
       );
+  }
+
+  handleTypeIconClicked() {
+    let newType = this.props.card.type;
+    switch(newType) {
+      case 'comment': newType = 'task'; break;
+      case 'task': newType = 'feature'; break;
+      case 'feature': newType = 'bug'; break;
+      case 'bug': newType = 'question'; break;
+      case 'question': newType = 'comment'; break;
+    }
+    Meteor.call('cards.updateType', this.props.card._id, newType);
   }
 
   renderHashtags() {

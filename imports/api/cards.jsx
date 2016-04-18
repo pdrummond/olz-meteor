@@ -109,7 +109,19 @@ Meteor.methods({
     }
 
     Cards.remove(cardId);
+  },
+
+  'cards.updateType'(cardId, type) {
+      check(cardId, String);
+      check(type, String);
+
+      if (! Meteor.userId()) {
+          throw new Meteor.Error('not-authenticated');
+      }
+
+      Cards.update(cardId, { $set: { type } });
   }
+
 });
 
 Cards.helpers = {
