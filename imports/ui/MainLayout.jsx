@@ -15,12 +15,12 @@ class MainLayout extends Component {
       console.log("currentUser:" + JSON.stringify(this.props.currentUser, null, 4));
       console.log("users:" + JSON.stringify(this.props.users));
       return (
-        <div>
+        <div id="main-layout-wrapper" className="full-height">
           <div id="cover-image-wrapper">
             <div id="cover-image-front" className="cover-image"></div>
             <div id="cover-image-back" className="cover-image"></div>
           </div>
-          <div id="main-layout">
+          <div id="main-layout-content" className="full-height">
 
             <div id="top-banner">
               {this.renderUserButtons()}

@@ -1,3 +1,8 @@
+
+#react-root {
+  height: 100%;
+}
+
 #cover-image-wrapper {
 
 }
@@ -33,9 +38,12 @@
   padding: 10px;
 }
 
+.full-height {
+  height: 100%;
+}
+
 #main-content {
   position: relative;
-  min-height: 1500px;
   min-width: 600px;
   top: 80px;
   background-color: #FCFCFC;
@@ -46,7 +54,13 @@
   margin: auto auto;
   width: 80%;
   border-radius: 5px;
+  height: calc(100% - 130px);
+  overflow:auto;
+}
+
+#feed-page-wrapper {
   padding:30px;
+
 }
 
 .card-header-label {
@@ -55,8 +69,7 @@
 }
 
 .user-fullname-label {
-    color:gray;
-    text-transform: uppercase;
+    color:gray;    
     font-weight:bold;
 }
 
@@ -72,4 +85,47 @@
 
 .ols-card .footer {
   background-color:whitesmoke !important;
+}
+
+#main-layout .ols-card-detail {
+  border: none;
+  box-shadow: none;
+  margin-bottom:50px;
+}
+
+.ols-card-detail .footer {
+  background-color:whitesmoke !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important
+}
+
+.message-box {
+    border:2px solid lightgray;
+    position: absolute;
+    bottom: 20px;
+    padding:10px;
+    background-color:white;
+    z-index:1;
+    left: 10px;
+    width: calc(100% - 20px);
+}
+
+.message-box textarea {
+    padding:10px;
+    border:none;
+    width:100%;
+    height:150px;
+    resize:none;
+    outline:none;
+    background: whitesmoke;
+    border-radius:5px;
+}
+
+.message-box input {
+    padding:5px;
+    border:none;
+    background-color:whitesmoke;
+    border-radius:5px;
+    margin-bottom:5px;
+    width:100%;
+    outline:none;
 }

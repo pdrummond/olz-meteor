@@ -49,7 +49,7 @@ class FeedPage extends Component {
       );
     } else {
       return (
-        <div className="container feed-page-wrapper">
+        <div id="feed-page-wrapper" className="container">
           {/*<LeftSidebar homeSection={this.props.homeSection} groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>*/}
           <div>
             <div className="ui secondary menu">
@@ -64,7 +64,7 @@ class FeedPage extends Component {
               </div>
               <div className="right menu">
                 <div className="item">
-                  <a href="/card/create" className="ui teal button"><i className="plus icon"></i> Create</a>
+                  <a href="/cards/create" className="ui teal button"><i className="plus icon"></i> Create</a>
                 </div>
               </div>
             </div>

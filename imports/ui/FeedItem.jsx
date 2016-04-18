@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import React, { Component, PropTypes } from 'react';
 import {moment} from 'meteor/momentjs:moment';
-
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Cards } from '../api/cards.js';
 
 export default class FeedItem extends Component {
@@ -24,18 +24,20 @@ export default class FeedItem extends Component {
                 </div>
               </div>
 
-              <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.users, this.props.card)}/>
+              <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.card)}/>
               <span className="card-header-label">
                 <i className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', marginLeft:'10px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
                 <span className="user-fullname-label">@{this.props.card.username}</span>
-                <span className="date" style={{marginLeft:'5px'}}>{moment(this.props.card.createdAt).fromNow()}</span>
+                <span className="date" style={{marginLeft:'5px'}}>{moment(this.props.card.createdAt).fromNow()}</span> ●
+                {this.generateCardKey()}
               </span>
               </div>
-              <div className="content">
+              <div className="content" style={{cursor:'pointer'}} onClick={() => {FlowRouter.go(`/card/${this.props.card._id}`);}}>
                 <div className="description markdown-content">
+                  {this.props.card.title && this.props.card.title > 0 ?
                   <div className="ui transparent fluid input">
                     <h1>{this.props.card.title}</h1>
-                  </div>
+                  </div> : ''}
                   <div>
                     {this.props.card.content}
                   </div>
@@ -70,6 +72,12 @@ export default class FeedItem extends Component {
               </div>
             </div>
         );
+    }
+
+    generateCardKey() {
+      return (
+        <span style={{marginLeft:'5px'}} className="card-key">{Cards.helpers.getCardKey(this.props.card)}</span>
+      );
     }
 }
 

@@ -49,7 +49,7 @@ class CreateCardPage extends Component {
               <div className="content">
                 <div className="description">
                   <div className="ui transparent fluid input">
-                    <h1 style={{marginLeft:'10px'}}><input ref="titleRef" type="text" placeholder="Title..."/></h1>
+                    <h1 style={{width:'100%', marginLeft:'10px'}}><input style={{width:'100%'}} ref="titleRef" type="text" placeholder="Title..."/></h1>
                   </div>
                   <ProseEditor onChange={(content) => {this.setState({content})}} placeholder="Description..."/>
                 </div>
@@ -72,7 +72,6 @@ class CreateCardPage extends Component {
                           <div className="item">
                             Harold Tester
                           </div>
-
                         </div>
                       </div>
               </div>
@@ -84,9 +83,10 @@ class CreateCardPage extends Component {
 
   handleCreateCardButton() {
     const title = ReactDOM.findDOMNode(this.refs.titleRef).value.trim();
+    const type = 'discussion'; //cards always default to discussion
 
     if(this.state.content) {
-      Meteor.call('cards.insert', title, this.state.content, function(err, cardId) {
+      Meteor.call('cards.insert', title, this.state.content, type, function(err, cardId) {
         if(err) {
           alert("Error adding card: " + err.reason);
         } else {
