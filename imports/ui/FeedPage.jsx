@@ -152,7 +152,7 @@ class FeedPage extends Component {
     var match = re.exec(filterString);
     while (match != null) {
       var field = match[1].trim();
-      var value = match.length > 2 && match[2] != null ? match[2].trim() : null;
+      var value = match.length > 2 && match[2] != null ? match[2].trim().replace(':', '') : null;
       console.log("-- field: " + field);
       console.log("-- value: " + value);
       remainingText = remainingText.replace(field, '');

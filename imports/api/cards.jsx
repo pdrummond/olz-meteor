@@ -10,21 +10,20 @@ export const Cards = new Mongo.Collection('Cards');
 
 if (Meteor.isServer) {
   Meteor.publish('cards', function(opts) {
-    console.log("cards publications opts: " + JSON.stringify(opts));
+  console.log("cards publications opts: " + JSON.stringify(opts));
     let cardIds = [];
-    if(!_.isEmpty(opts.filter) || !_.isEmpty(opts.hashtags) ) {
-      if(opts.hashtags) {
-        Hashtags.find({name: {$in: opts.hashtags}}).forEach(function (hashtag) {
-          let card = Cards.findOne(hashtag.cardId);
-          cardIds.push(card._id);
-        });
+    opts.filter = opts.filter || {};
+    if(!_.isEmpty(opts.hashtags) ) {
+      Hashtags.find({name: {$in: opts.hashtags}}).forEach(function (hashtag) {
+        let card = Cards.findOne(hashtag.cardId);
+        cardIds.push(card._id);
+      });
+      if(cardIds.length > 0) {
+        opts.filter._id = {$in: cardIds};
       }
-      opts.filter._id = {$in: cardIds};
-      console.log("filter:" + JSON.stringify(opts.filter));
-      return Cards.find(opts.filter);
-    } else {
-      return Cards.find();
     }
+    console.log("BOOM:" + JSON.stringify(opts.filter));
+    return Cards.find(opts.filter);
   });
 
   //Publish card and all its children
