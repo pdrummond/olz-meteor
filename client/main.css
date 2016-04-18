@@ -162,3 +162,14 @@
   left: 10px;
   width: 2em;
 }
+
+.hashtag-label {
+  background-color: #CADCE2;
+  border-radius: 5px;
+  padding: 2px 8px 3px;
+  margin-right:5px;
+}
+
+.hashtag-label .text {
+  font-size:12px;
+}

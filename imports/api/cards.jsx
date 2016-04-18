@@ -4,17 +4,37 @@ import React, { Component, PropTypes } from 'react';
 import { check, Match } from 'meteor/check';
 import { slugify } from 'underscore.string';
 
+import { Hashtags } from './hashtags';
+
 export const Cards = new Mongo.Collection('Cards');
 
 if (Meteor.isServer) {
-  Meteor.publish('cards', function() {
-    return Cards.find();
+  Meteor.publish('cards', function(opts) {
+    console.log("cards publications opts: " + JSON.stringify(opts));
+    let cardIds = [];
+    if(!_.isEmpty(opts.filter) || !_.isEmpty(opts.hashtags) ) {
+      if(opts.hashtags) {
+        Hashtags.find({name: {$in: opts.hashtags}}).forEach(function (hashtag) {
+          let card = Cards.findOne(hashtag.cardId);
+          cardIds.push(card._id);
+        });
+      }
+      opts.filter._id = {$in: cardIds};
+      console.log("filter:" + JSON.stringify(opts.filter));
+      return Cards.find(opts.filter);
+    } else {
+      return Cards.find();
+    }
   });
 
   //Publish card and all its children
   Meteor.publish('currentCard', function(cardId) {
     var card = Cards.findOne(cardId);
-    return Cards.find({outerCardId: card.outerCardId});
+    if(card) {
+      return Cards.find({outerCardId: card.outerCardId});
+    } else {
+      this.ready();
+    }
   });
 
   Meteor.publish('messageCards', function(cardId) {

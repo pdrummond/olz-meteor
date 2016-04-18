@@ -4,6 +4,8 @@ import {moment} from 'meteor/momentjs:moment';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Cards } from '../api/cards.jsx';
 
+import HashtagLabel from './HashtagLabel';
+
 export default class FeedItem extends Component {
 
     deleteThisCard() {
@@ -51,12 +53,15 @@ export default class FeedItem extends Component {
                       Add Hashtag
                     </div>
                     <div className="divider"></div>
-                    <div className="ui left large icon input">
-                      <i className="slack icon"></i>
-                      <input type="text" placeholder="Add tag here"/>
+                    <div className="ui left large labeled input">
+                      <div className="ui label">#</div>
+                      <input ref="hashtagInput" onKeyDown={this.onHashtagKeyDown.bind(this)} placeholder="Type hashtag here"/>
                     </div>
                   </div>
                 </div>
+                <span className="hashtags" style={{marginLeft:'5px'}}>
+                  {this.renderHashtags()}
+                </span>
                       <div className="ui right floated icon top left pointing dropdown mini basic button">
                         <i className="users icon" title="Add Members"></i>
                         <div className="menu">
@@ -74,7 +79,27 @@ export default class FeedItem extends Component {
         );
     }
 
+    renderHashtags() {
+      let hashtags = this.props.hashtags.filter( hashtag => hashtag.cardId === this.props.card._id);
+      return hashtags.map((hashtag) => (
+        <HashtagLabel key={hashtag._id} hashtag={hashtag}/>
+      ));
+    }
 
+    onHashtagKeyDown(event) {
+      if (event.keyCode === 13 && event.shiftKey == false) {
+        let hashtag = event.target.value.trim().replace('#', '');
+        if(hashtag.length > 0) {
+          Meteor.call('hashtags.insert', hashtag, this.props.card._id, function(err) {
+              if(err) {
+                  alert("Error adding hashtag: " + err.reason);
+              } else {
+                  this.refs.hashtagInput.value = '';
+              }
+          }.bind(this));
+        }
+      }
+    }
 }
 
 FeedItem.propTypes = {

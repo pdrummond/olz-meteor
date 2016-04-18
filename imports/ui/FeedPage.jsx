@@ -1,10 +1,12 @@
 import { Meteor } from 'meteor/meteor';
+import { Session } from 'meteor/session';
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Cards } from '../api/cards';
+import { Hashtags } from '../api/hashtags';
 
 import FeedItem from './FeedItem';
 
@@ -17,7 +19,7 @@ class FeedPage extends Component {
   renderCards() {
     if(this.props.cards.length > 0) {
       return this.props.cards.map((card) => (
-        <FeedItem users={this.props.users} key={card._id} card={card}/>
+        <FeedItem hashtags={this.props.hashtags} users={this.props.users} key={card._id} card={card}/>
       ));
     } else {
       if(Meteor.userId()) {
@@ -53,7 +55,7 @@ class FeedPage extends Component {
               </div>
               <div className="item" style={{flexGrow:1}}>
                 <div className="ui icon input">
-                  <input type="text" placeholder="Search..."/>
+                  <input type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
                   <i className="search icon"></i>
                 </div>
               </div>
@@ -89,6 +91,16 @@ class FeedPage extends Component {
           </div>
         </div>
       );
+  }
+
+  handleSearchKeyDown(e) {
+    e.persist();
+    if(this.searchInputKeyTimer) {
+      clearTimeout(this.searchInputKeyTimer);
+    }
+    this.searchInputKeyTimer = setTimeout(function() {
+      Session.set('query', this.getFilterQuery(e.target.value));
+    }.bind(this), 500);
   }
 
   renderSignUpMessage() {
@@ -129,6 +141,56 @@ class FeedPage extends Component {
       }
     }
   }
+
+  getFilterQuery(filterString) {
+    console.log("> getFilterQuery");
+    let hashtags = [];
+    var filter = {};
+    var remainingText = filterString;
+    //var re = new RegExp("([\\w\\.-]+)\\s*:\\s*([\\w\\.-]+)", "g");
+    var re = new RegExp("([\\w\\.@#-]+)\\s*([ :]\\s*([\\w\\.-]+))?", "g");
+    var match = re.exec(filterString);
+    while (match != null) {
+      var field = match[1].trim();
+      var value = match.length > 2 && match[2] != null ? match[2].trim() : null;
+      console.log("-- field: " + field);
+      console.log("-- value: " + value);
+      remainingText = remainingText.replace(field, '');
+      if(value != null) {
+        remainingText = remainingText.replace(value, '');
+      }
+      remainingText = remainingText.replace(/:/g, '');
+      if(field.startsWith('#')) {
+        hashtags.push(field.replace('#', ''));
+      } else if(field == 'open') {
+        field = "isOpen";
+      } else if(field == 'closed') {
+        field = "isOpen";
+        value = (value=="true" ? "false" : "true");
+      }
+
+      if(value) {
+        if(value == "true") {
+          value = true;
+        } else if(value == "false") {
+          value = false;
+        }
+        filter[field] = value;
+      }
+      match = re.exec(filterString);
+    }
+    if(remainingText && remainingText.length > 0) {
+      filter["$or"] = [{title: {$regex:remainingText}}, {content: {$regex:remainingText}}];
+    }
+    console.log("getFilterQuery: Current client-side item filter is: " + JSON.stringify(filter));
+    let result = {
+      filter,
+      hashtags
+    }
+    console.log(" -- result:" + JSON.stringify(result, null, 2));
+    console.log("< getFilterQuery");
+    return result;
+  }
 }
 
 FeedPage.propTypes = {
@@ -136,12 +198,16 @@ FeedPage.propTypes = {
 };
 
 export default createContainer((props) => {
-  var cardsHandle = Meteor.subscribe('cards');
+  var query = Session.get('query') || {};
+  console.log("QUERY: " + JSON.stringify(query));
+  var cardsHandle = Meteor.subscribe('cards', query);
+  var hashtagsHandle = Meteor.subscribe('hashtags');
   var data = {
-    loading: !(cardsHandle.ready()),
+    loading: !(cardsHandle.ready() && hashtagsHandle.ready()),
     currentUser: Meteor.user()
   };
-  let selector = {};
-  data.cards = Cards.find(selector, { sort: { updatedAt: -1 } }).fetch();
+  data.cards = Cards.find({}, { sort: { updatedAt: -1 } }).fetch();
+  data.hashtags = Hashtags.find().fetch();
+  console.log("hashtags:" + JSON.stringify(data.hashtags));
   return data;
 }, FeedPage);
