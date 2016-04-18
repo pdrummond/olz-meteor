@@ -4,9 +4,11 @@ import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Cards } from '../api/cards';
-
+import { Hashtags } from '../api/hashtags';
 import MessageBox from './MessageBox';
 import MessageItem from './MessageItem';
+
+import SearchUtils from '../utils/SearchUtils';
 
 class CardDetailPage extends Component {
 
@@ -82,6 +84,30 @@ class CardDetailPage extends Component {
                 </div>
               </div>
             </div>
+            <div className="ui secondary pointing small menu" style={{padding:'0px 10px'}}>
+              <a className="active item">
+                All
+              </a>
+              <a className="item">
+                Now
+              </a>
+              <div className="right menu">
+                <div className="item">
+                  <div className="ui icon input">
+                    <input type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
+                      <i className="search link icon"></i>
+                    </div>
+                  </div>
+                <div className="ui dropdown item">
+                  <i className="vertical ellipsis icon"></i>
+                <div className="menu">
+                  <a className="item">Remove Tab</a>
+                  <a className="item">New Tab</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
             <div id="message-list" ref="messageList" className="ui feed">
               {this.renderMessageItems()}
             </div>
@@ -93,7 +119,7 @@ class CardDetailPage extends Component {
 
     renderMessageItems() {
       return this.props.messageCards.map((card) => (
-        <MessageItem key={card._id} card={card}/>
+        <MessageItem hashtags={this.props.hashtags} key={card._id} card={card}/>
       ));
     }
 
@@ -107,16 +133,31 @@ class CardDetailPage extends Component {
             }
         }, 20);
     }
+
+    handleSearchKeyDown(e) {
+      e.persist();
+      if(this.searchInputKeyTimer) {
+        clearTimeout(this.searchInputKeyTimer);
+      }
+      this.searchInputKeyTimer = setTimeout(function() {
+        Session.set('searchQuery', SearchUtils.getFilterQuery(e.target.value));
+      }.bind(this), 500);
+    }
   }
 
   export default createContainer(() => {
+    var query = Session.get('searchQuery') || {filter:{}};
+    console.log("QUERY: " + JSON.stringify(query));
     var cardId = FlowRouter.getParam('cardId');
     var cardHandle = Meteor.subscribe('currentCard', cardId);
-    var messageCardsHandle = Meteor.subscribe('messageCards', cardId);
+    var hashtagsHandle = Meteor.subscribe('hashtags');
+    query.filter.parentCardId = cardId;
+    var messageCardsHandle = Meteor.subscribe('cards', query);
     var data = {
-      loading: !(cardHandle.ready() && messageCardsHandle.ready()),
+      loading: !(cardHandle.ready() && messageCardsHandle.ready() && hashtagsHandle.ready()),
       currentCard: Cards.findOne(cardId),
-      messageCards: Cards.find({parentCardId: cardId}).fetch()
+      messageCards: SearchUtils.filterCards(query).fetch(),
+      hashtags: Hashtags.find().fetch()
     };
     return data;
   }, CardDetailPage);

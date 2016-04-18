@@ -5,7 +5,8 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Cards } from '../api/cards';
 
-import MarkdownUtils from './utils/MarkdownUtils';
+import MarkdownUtils from '../utils/MarkdownUtils';
+import HashtagLabel from './HashtagLabel';
 
 export default class MessageItem extends Component {
 
@@ -20,23 +21,64 @@ export default class MessageItem extends Component {
   render() {
     return (
       <div id="message-item" className="event">
-    <div className="label">
-      <img className="avatar" src={Cards.helpers.getUserProfileImage(this.props.card)}>
-      </img>
-    </div>
-    <div className="content">
-      <div className="summary">
-        <div className="card-header-label">
-        <i className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
-        <span className="user-fullname-label">@{this.props.card.username}</span>
-        <span style={{marginLeft:'5px'}} className="date">{moment(this.props.card.createdAt).fromNow()}</span>        
-        {Cards.helpers.renderCardKeySpan(this.props.card, 1)}
+        <div className="label">
+          <img className="avatar" src={Cards.helpers.getUserProfileImage(this.props.card)}>
+          </img>
+        </div>
+        <div className="content">
+          <div className="summary">
+            <div className="card-header-label">
+              <i className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
+              <span className="user-fullname-label">@{this.props.card.username}</span>
+              <span style={{marginLeft:'5px'}} className="date">{moment(this.props.card.createdAt).fromNow()}</span>
+                <div className="ui icon top left pointing dropdown mini basic button right floated">
+                  <i className="vertical ellipsis icon popup-label" title="Hashtag options"></i>
+                  <div className="menu">
+                    <div className="item">
+                      Add Hashtag
+                    </div>
+                    <div className="divider"></div>
+                    <div className="ui left large labeled input">
+                      <div className="ui label">#</div>
+                      <input ref="hashtagInput" onKeyDown={this.onHashtagKeyDown.bind(this)} placeholder="Type hashtag here"/>
+                    </div>
+                  </div>
+                </div>
+                {Cards.helpers.renderCardKeySpan(this.props.card, 1)}
+            </div>
+            </div>
+            <div className="extra text markdown-content" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( this.props.card.content ) }>
+            </div>
+
+          <div className="meta">
+            <span className="hashtags">
+              {this.renderHashtags()}
+            </span>
+        </div>
         </div>
       </div>
-      <div className="extra text markdown-content" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( this.props.card.content ) }>
-      </div>
-    </div>
-  </div>
-);
-}
+      );
+  }
+
+  renderHashtags() {
+    let hashtags = this.props.hashtags.filter( hashtag => hashtag.cardId === this.props.card._id);
+    return hashtags.map((hashtag) => (
+      <HashtagLabel key={hashtag._id} hashtag={hashtag}/>
+    ));
+  }
+
+  onHashtagKeyDown(event) {
+    if (event.keyCode === 13 && event.shiftKey == false) {
+      let hashtag = event.target.value.trim().replace('#', '');
+      if(hashtag.length > 0) {
+        Meteor.call('hashtags.insert', hashtag, this.props.card._id, function(err) {
+            if(err) {
+                alert("Error adding hashtag: " + err.reason);
+            } else {
+                this.refs.hashtagInput.value = '';
+            }
+        }.bind(this));
+      }
+    }
+  }
 }

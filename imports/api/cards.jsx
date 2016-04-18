@@ -5,25 +5,13 @@ import { check, Match } from 'meteor/check';
 import { slugify } from 'underscore.string';
 
 import { Hashtags } from './hashtags';
+import SearchUtils from '../utils/SearchUtils';
 
 export const Cards = new Mongo.Collection('Cards');
 
 if (Meteor.isServer) {
   Meteor.publish('cards', function(opts) {
-  console.log("cards publications opts: " + JSON.stringify(opts));
-    let cardIds = [];
-    opts.filter = opts.filter || {};
-    if(!_.isEmpty(opts.hashtags) ) {
-      Hashtags.find({name: {$in: opts.hashtags}}).forEach(function (hashtag) {
-        let card = Cards.findOne(hashtag.cardId);
-        cardIds.push(card._id);
-      });
-      if(cardIds.length > 0) {
-        opts.filter._id = {$in: cardIds};
-      }
-    }
-    console.log("BOOM:" + JSON.stringify(opts.filter));
-    return Cards.find(opts.filter);
+    return SearchUtils.filterCards(opts);
   });
 
   //Publish card and all its children
@@ -34,10 +22,6 @@ if (Meteor.isServer) {
     } else {
       this.ready();
     }
-  });
-
-  Meteor.publish('messageCards', function(cardId) {
-    return Cards.find({parentCardId: cardId});
   });
 }
 

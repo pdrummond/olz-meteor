@@ -10,7 +10,7 @@ export default class HashtagLabel extends Component {
   }
 
   componentDidMount() {
-    $('.ui.dropdown').dropdown({action:'hide'});
+    $('.ui.dropdown').dropdown({action:'nothing'});
   }
 
   render() {
