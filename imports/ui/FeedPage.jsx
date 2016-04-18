@@ -4,9 +4,9 @@ import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
-import { Cards } from '../api/cards.js';
+import { Cards } from '../api/cards';
 
-import FeedItem from './FeedItem.jsx';
+import FeedItem from './FeedItem';
 
 class FeedPage extends Component {
 
@@ -58,6 +58,25 @@ class FeedPage extends Component {
                 </div>
               </div>
               <div className="right menu">
+                <div className="ui dropdown item">
+                  All Users <i className="dropdown icon"></i>
+                <div className="menu">
+                  <a className="item">@pdrummond</a>
+                  <a className="item">@harold</a>
+                  <div className="divider"></div>
+                  <a className="item">All Users</a>
+                </div>
+              </div>
+              <div className="ui dropdown item">
+                All Types <i className="dropdown icon"></i>
+              <div className="menu">
+                <a className="item">Projects</a>
+                <a className="item">Tasks</a>
+                <a className="item">Comments</a>
+                <div className="divider"></div>
+                <a className="item">All Types</a>
+              </div>
+            </div>
                 <div className="item">
                   <a href="/cards/create" className="ui teal button"><i className="plus icon"></i> Create</a>
                 </div>

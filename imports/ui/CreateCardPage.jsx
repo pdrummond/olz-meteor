@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import ProseEditor from './ProseEditor.jsx';
-import { Cards } from '../api/cards.js';
+import { Cards } from '../api/cards';
 
 class CreateCardPage extends Component {
 

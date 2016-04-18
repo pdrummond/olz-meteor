@@ -74,6 +74,11 @@
     font-weight:bold;
 }
 
+.card-key a {
+  color:#BABABA;
+  font-size:12px;
+}
+
 .ProseMirror {
   border: none;
 }
@@ -91,7 +96,6 @@
 #main-content .ols-card-detail {
   border: none;
   box-shadow: none;
-  margin-bottom:50px;
 }
 
 .ols-card-detail .footer {
@@ -129,4 +133,15 @@
     margin-bottom:5px;
     width:100%;
     outline:none;
+}
+
+#message-list {
+  padding:10px;
+  height: calc(100% - 440px);
+  overflow: auto;
+}
+
+#message-list > .event > .content .extra.text {
+  max-width:none;
+  padding-right:50px;
 }

@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import ReactDOM from 'react-dom';
 import React, { Component, PropTypes } from 'react';
 import ProseEditor from './ProseEditor.jsx';
-import { Cards } from '../api/cards.js';
+import { Cards } from '../api/cards';
 
 export default class MessageBox extends Component {
     constructor(props) {

@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
+import React, { Component, PropTypes } from 'react';
 import { check, Match } from 'meteor/check';
 import { slugify } from 'underscore.string';
 
@@ -10,16 +11,21 @@ if (Meteor.isServer) {
     return Cards.find();
   });
 
-  //Publish current card and all its parent cards.
+  //Publish card and all its children
   Meteor.publish('currentCard', function(cardId) {
     var card = Cards.findOne(cardId);
-    return Cards.find({$or: [{_id: cardId}, {parentCardId: card.parentCardId}]});
+    return Cards.find({outerCardId: card.outerCardId});
+  });
+
+  Meteor.publish('messageCards', function(cardId) {
+    return Cards.find({parentCardId: cardId});
   });
 }
 
 Meteor.methods({
 
   'cards.insert'(title, content, type, parentCardId) {
+    console.log("> cards.insert");
     check(title, Match.Optional(String));
     check(content, String);
     check(type, String);
@@ -51,8 +57,6 @@ Meteor.methods({
     let key = null;
     let seq = null;
     let idealKey = title && title.length > 3 ? title : (content && content.length > 3 ? content.substring(0, 10) : 'CARD'); //CARD is default key if there isn't enough title or content (which is unlikely but possible so we have to consider it here!)
-    console.log("idealKey: " + idealKey);
-    console.log("idealKey slug: " + slugify(idealKey));
     idealKey = slugify(idealKey).replace('-', '').toUpperCase();
     if(!parentCardId) {
       //Generate a unique key for the card
@@ -64,9 +68,11 @@ Meteor.methods({
       }
       seq = 1;  //The outer card is always the first seq.
     } else {
-      console.log("Count of cards with outerCardId " + outerCardId + ": " + Cards.find({outerCardId}).count());
       seq = Cards.find({outerCardId}).count()+1;
     }
+
+    console.log("-- parentCardId: " + parentCardId);
+    console.log("-- outerCardId: " + outerCardId);
 
     const now = new Date();
     var cardId = Cards.insert({
@@ -83,6 +89,7 @@ Meteor.methods({
       userId: Meteor.userId(),
       username: Meteor.user().username
     });
+    console.log("< cards.insert");
     return cardId;
   },
 
@@ -119,6 +126,7 @@ Cards.helpers = {
     var typeClassName = 'comments';
     switch(type) {
       case 'discussion': typeClassName = 'comments'; break;
+      case 'comment': typeClassName = 'comment'; break;
       case 'story': typeClassName = 'newspaper'; break;
       case 'journal': typeClassName = 'book'; break;
 
@@ -142,6 +150,7 @@ Cards.helpers = {
     let color = '#BABABA';
     switch(type) {
       case 'discussion': color = '#026AA7'; break;
+      case 'comment': color = '#009688'; break;
       case 'story': color = '#00BCD4'; break;
       case 'journal': color = '#375BC8'; break;
 
@@ -163,9 +172,27 @@ Cards.helpers = {
   getCardKey(card) {
     var outerCard = Cards.findOne(card.outerCardId);
     if(outerCard) {
-      return `#${outerCard.key}-${card.seq}`;
+      return outerCard.key;
     } else {
-      return '#???';
+      return '???';
     }
+  },
+
+  renderCardKeySpan(card, level) {
+    var key = this.getCardKey(card);
+    var keySpans = [];
+    var currentLevel = 0;
+    level = level || 10;
+    do {
+      keySpans.unshift(<a key={Random.id()} href={`/card/${card._id}`} className="card-key">#{key}-{card.seq}</a>);
+      card = Cards.findOne(card.parentCardId);
+      currentLevel++;
+      if(card && currentLevel < level) {
+        keySpans.unshift(<span key={Random.id()}> → </span>);
+      }
+
+    } while(card && currentLevel < level);
+
+    return <span style={{marginLeft:'5px'}} className="card-key">{keySpans} </span>;
   }
 }
