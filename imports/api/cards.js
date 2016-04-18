@@ -106,9 +106,11 @@ Cards.helpers = {
 
   getUserProfileImage(card) {
     let profileImage = '/images/user-placeholder.png';
-    var user = Meteor.users.findOne(card.userId);
-    if(user) {
-      profileImage = user.profileImage;
+    if(card) {
+      var user = Meteor.users.findOne(card.userId);
+      if(user) {
+        profileImage = user.profileImage;
+      }
     }
     return profileImage;
   },

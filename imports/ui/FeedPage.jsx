@@ -43,11 +43,6 @@ class FeedPage extends Component {
   }
 
   render() {
-    if(this.props.loading) {
-      return (
-        <p>Loading...</p>
-      );
-    } else {
       return (
         <div id="feed-page-wrapper" className="container">
           {/*<LeftSidebar homeSection={this.props.homeSection} groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>*/}
@@ -70,12 +65,11 @@ class FeedPage extends Component {
             </div>
           </div>
           {this.renderSignUpMessage()}
-          <div className="feed-page ui vertical segment">
-              {this.renderCards()}
+          <div className={this.props.loading?"feed-page ui vertical loading segment":"feed-page vertical segment"}>
+              {!this.props.loading?this.renderCards():''}
           </div>
         </div>
       );
-    }
   }
 
   renderSignUpMessage() {

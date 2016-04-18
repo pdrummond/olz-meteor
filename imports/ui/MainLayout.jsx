@@ -9,11 +9,6 @@ class MainLayout extends Component {
   }
 
   render() {
-    if(this.props.loading) {
-      return (<p>Loading...</p>);
-    } else {
-      console.log("currentUser:" + JSON.stringify(this.props.currentUser, null, 4));
-      console.log("users:" + JSON.stringify(this.props.users));
       return (
         <div id="main-layout-wrapper" className="full-height">
           <div id="cover-image-wrapper">
@@ -26,13 +21,12 @@ class MainLayout extends Component {
               {this.renderUserButtons()}
             </div>
 
-            <div id="main-content">
-              {this.props.main()}
+            <div id="main-content" className={this.props.loading?"ui loading segment":"ui segment"}>
+              {!this.props.loading?this.props.main():''}
             </div>
           </div>
         </div>
       );
-    }
   }
 
   renderUserButtons() {
