@@ -82,10 +82,10 @@ class CardDetailPage extends Component {
                 </div>
               </div>
             </div>
-            <div id="message-list" className="ui feed">
+            <div id="message-list" ref="messageList" className="ui feed">
               {this.renderMessageItems()}
             </div>
-            <MessageBox card={this.props.currentCard}/>
+            <MessageBox card={this.props.currentCard} onMessageCreated={this.scrollBottom.bind(this)}/>
         </div>
       </div>
       );
@@ -95,6 +95,17 @@ class CardDetailPage extends Component {
       return this.props.messageCards.map((card) => (
         <MessageItem key={card._id} card={card}/>
       ));
+    }
+
+    scrollBottom(callback) {
+        var self = this;
+        setTimeout(function() {
+            let node = ReactDOM.findDOMNode(self.refs.messageList);
+            node.scrollTop = node.scrollHeight;
+            if(callback) {
+                callback();
+            }
+        }, 20);
     }
   }
 
@@ -106,6 +117,6 @@ class CardDetailPage extends Component {
       loading: !(cardHandle.ready() && messageCardsHandle.ready()),
       currentCard: Cards.findOne(cardId),
       messageCards: Cards.find({parentCardId: cardId}).fetch()
-    };    
+    };
     return data;
   }, CardDetailPage);

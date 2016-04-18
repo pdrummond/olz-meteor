@@ -26,10 +26,10 @@ export default class FeedItem extends Component {
 
               <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.card)}/>
               <span className="card-header-label">
-                <i className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', marginLeft:'10px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
+                <i className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', margin:'0px 5px 0px 5px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
                 <span className="user-fullname-label">@{this.props.card.username}</span>
-                <span className="date" style={{marginLeft:'5px'}}>{moment(this.props.card.createdAt).fromNow()}</span> ●
-                {Cards.helpers.renderCardKeySpan(this.props.card)}                
+                <span className="date" style={{marginLeft:'5px'}}>{moment(this.props.card.createdAt).fromNow()}</span>
+                {Cards.helpers.renderCardKeySpan(this.props.card)}
               </span>
               </div>
               <div className="content" style={{cursor:'pointer'}} onClick={() => {FlowRouter.go(`/card/${this.props.card._id}`);}}>

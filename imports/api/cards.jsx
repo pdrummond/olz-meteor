@@ -193,6 +193,6 @@ Cards.helpers = {
 
     } while(card && currentLevel < level);
 
-    return <span style={{marginLeft:'5px'}} className="card-key">{keySpans} </span>;
+    return <span style={{marginLeft:'5px'}} className="card-key-wrapper">{keySpans} </span>;
   }
 }

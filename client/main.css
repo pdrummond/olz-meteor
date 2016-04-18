@@ -66,17 +66,21 @@
 
 .card-header-label {
   color:#BABABA;
-  font-size:12px;
 }
 
 .user-fullname-label {
-    color:gray;
-    font-weight:bold;
+  font-weight:normal !important;
 }
 
-.card-key a {
+.card-key-wrapper {
+  float:right;
+  margin-right:10px;
+}
+
+.card-key-wrapper a {
   color:#BABABA;
   font-size:12px;
+  font-weight:normal;
 }
 
 .ProseMirror {
@@ -91,6 +95,11 @@
 
 .ols-card .footer {
   background-color:whitesmoke !important;
+}
+
+.ols-card.card img.avatar  {
+  width: 1.5em;
+  height: 1.5em;
 }
 
 #main-content .ols-card-detail {
@@ -144,4 +153,12 @@
 #message-list > .event > .content .extra.text {
   max-width:none;
   padding-right:50px;
+  margin-top:0;
+}
+
+#message-item .avatar {
+  position: relative;
+  top: 10px;
+  left: 10px;
+  width: 2em;
 }

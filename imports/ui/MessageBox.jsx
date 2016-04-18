@@ -73,6 +73,7 @@ export default class MessageBox extends Component {
                     alert("Error adding message card: " + err.reason);
                 } else {
                     this.setState({content: ''});
+                    this.props.onMessageCreated();
                 }
             }.bind(this));
         }
