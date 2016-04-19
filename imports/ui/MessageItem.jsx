@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Cards } from '../api/cards';
+import { prune } from 'underscore.string';
 
 import MarkdownUtils from '../utils/MarkdownUtils';
 import HashtagLabel from './HashtagLabel';
@@ -47,13 +48,14 @@ export default class MessageItem extends Component {
                 {Cards.helpers.renderCardKeySpan(this.props.card, 1)}
             </div>
             </div>
-            <div className="markdown-content">
+            <div className="markdown-content" style={{cursor:'pointer'}} onClick={() => {FlowRouter.go(`/card/${this.props.card._id}`);}}>
             {this.props.card.title && this.props.card.title.length > 0 ?
             <div className="ui transparent fluid input">
               <h1 className="title">{this.props.card.title}</h1>
             </div> : ''}
-            <div className="extra text" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( this.props.card.content ) }>
+            <div className="extra text" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( prune(this.props.card.content, 500 )) }>
             </div>
+            {this.props.card.content.length > 500 ? <a href="" style={{position:'relative', top:'10px'}}>(Read More...)</a> : ''}
             </div>
 
           <div className="meta">
