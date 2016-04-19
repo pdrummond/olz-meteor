@@ -196,11 +196,11 @@
   height: calc(100% - 50px);
 }
 
-#main-content #card-detail-content {
+#main-content #card-detail-content.longform {
   padding:0px 50px;
 }
 
-#main-content #card-detail-content p {
+#main-content #card-detail-content.longform p {
   font-weight: 400;
   font-size: 18px;
   line-height: 1.5 !important;

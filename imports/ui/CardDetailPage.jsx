@@ -78,13 +78,13 @@ class CardDetailPage extends Component {
                 </span>:''}
               </div>
               <div className="content">
-                <div id="card-detail-content" className="description markdown-content">
+                <div id="card-detail-content" className={this.state.longFormMode?"longform description markdown-content":"description markdown-content"}>
                   <div className="ui transparent fluid input">
                     <h1 className="title">{!this.props.loading?this.props.currentCard.title:""}</h1>
                   </div>
                   {!this.props.loading?<div dangerouslySetInnerHTML={this.getCardContent()}></div>:""}
-                  {!this.props.loading && !this.state.longFormMode ? <a href="" onClick={() => {this.setState({longFormMode:true})}} style={{position:'relative', top:'5px'}}><i className="expand icon"></i> Read More...</a> : ''}
-                  {!this.props.loading && this.state.longFormMode ? <a href="" onClick={() => {this.setState({longFormMode:false})}} style={{position:'relative', top:'5px'}}><i className="compress icon"></i> Read Less...</a> : ''}
+                  {!this.props.loading && this.props.currentCard.content.length > 500 && !this.state.longFormMode ? <a href="" onClick={() => {this.setState({longFormMode:true})}} style={{position:'relative', top:'5px'}}><i className="expand icon"></i> Read More...</a> : ''}
+                  {!this.props.loading && this.props.currentCard.content.length > 500 && this.state.longFormMode ? <a href="" onClick={() => {this.setState({longFormMode:false})}} style={{position:'relative', top:'5px'}}><i className="compress icon"></i> Read Less...</a> : ''}
                 </div>
               </div>
               <div className="extra content footer">
