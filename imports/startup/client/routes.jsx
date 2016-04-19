@@ -38,8 +38,6 @@ FlowRouter.route('/card/:cardId', {
     },
 });
 
-
-
 FlowRouter.route('/join', {
     name: 'join',
     action() {

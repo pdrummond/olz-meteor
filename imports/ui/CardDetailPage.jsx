@@ -5,8 +5,10 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Cards } from '../api/cards';
 import { Hashtags } from '../api/hashtags';
+import { Tabs } from '../api/tabs';
 import MessageBox from './MessageBox';
 import MessageItem from './MessageItem';
+import TabItem from './TabItem';
 
 import SearchUtils from '../utils/SearchUtils';
 
@@ -18,6 +20,12 @@ class CardDetailPage extends Component {
 
   componentDidMount() {
     $('.ui.dropdown').dropdown();
+  }
+
+  componentDidUpdate() {
+    let searchInput = ReactDOM.findDOMNode(this.refs.searchInput);
+    searchInput.value=this.props.query;
+    console.log("componentDidUpdate searchInput is: " + searchInput.value);
   }
 
   render() {
@@ -85,36 +93,39 @@ class CardDetailPage extends Component {
               </div>
             </div>
             <div className="ui secondary pointing small menu" style={{padding:'0px 10px'}}>
-              <a className="active item">
-                All
-              </a>
-              <a className="item">
-                Now
-              </a>
+              {this.renderTabs()}
               <div className="right menu">
                 <div className="item">
                   <div className="ui icon input">
-                    <input type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
-                      <i className="search link icon"></i>
-                    </div>
+                    <input ref="searchInput" type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
+                    <i className="search link icon"></i>
                   </div>
+                </div>
                 <div className="ui dropdown item">
                   <i className="vertical ellipsis icon"></i>
-                <div className="menu">
-                  <a className="item">Remove Tab</a>
-                  <a className="item">New Tab</a>
+                  <div className="menu">
+                    <a className="item" onClick={this.handleEditTabClicked.bind(this)}>Edit Tab</a>
+                    <div className="divider"></div>
+                    <a className="item" onClick={this.handleNewTabClicked.bind(this)}>New Tab</a>
+                    <a className="item">Remove Tab</a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
             <div id="message-list" ref="messageList" className="ui feed">
               {this.renderMessageItems()}
             </div>
             <MessageBox card={this.props.currentCard} onMessageCreated={this.scrollBottom.bind(this)}/>
+          </div>
         </div>
-      </div>
       );
+    }
+
+    renderTabs() {
+      return this.props.tabs.map((tab) => (
+        <TabItem key={tab._id} tab={tab} selectedTabId={this.props.selectedTabId} query={this.props.query}/>
+      ));
     }
 
     renderMessageItems() {
@@ -123,15 +134,42 @@ class CardDetailPage extends Component {
       ));
     }
 
-    scrollBottom(callback) {
-        var self = this;
-        setTimeout(function() {
-            let node = ReactDOM.findDOMNode(self.refs.messageList);
-            node.scrollTop = node.scrollHeight;
-            if(callback) {
-                callback();
+    handleNewTabClicked() {
+      let title = prompt('Enter tab title');
+      let query = prompt('Enter query:');
+      let icon = prompt('Enter icon:');
+      if(title != null) {
+        icon = icon || 'circle';
+        Meteor.call('tabs.insert', title, 'no description', 'normal', icon, query, this.props.currentCard._id);
+      }
+    }
+
+    handleEditTabClicked() {
+      let tab = _.findWhere(this.props.tabs, {query: this.props.query});
+      if(tab) {
+        let title = prompt('Enter tab title', tab.title);
+        if(title != null) {
+          let query = prompt('Enter query:', tab.query);
+          if(query != null) {
+            let icon = prompt('Enter icon:', tab.icon);
+            if(icon != null) {
+                icon = icon || 'circle';
+                Meteor.call('tabs.update', tab._id, title, 'no description', 'normal', icon, query);
             }
-        }, 20);
+          }
+        }
+      }
+    }
+
+    scrollBottom(callback) {
+      var self = this;
+      setTimeout(function() {
+        let node = ReactDOM.findDOMNode(self.refs.messageList);
+        node.scrollTop = node.scrollHeight;
+        if(callback) {
+          callback();
+        }
+      }, 20);
     }
 
     handleSearchKeyDown(e) {
@@ -140,24 +178,34 @@ class CardDetailPage extends Component {
         clearTimeout(this.searchInputKeyTimer);
       }
       this.searchInputKeyTimer = setTimeout(function() {
-        Session.set('searchQuery', SearchUtils.getFilterQuery(e.target.value));
+        FlowRouter.go('cardDetailPage', {cardId: this.props.currentCard._id}, {'query': encodeURIComponent(e.target.value)});
       }.bind(this), 500);
     }
   }
 
   export default createContainer(() => {
-    var query = Session.get('searchQuery') || {filter:{}};
-    console.log("QUERY: " + JSON.stringify(query));
     var cardId = FlowRouter.getParam('cardId');
+    var query = decodeURIComponent(FlowRouter.getQueryParam('query'));
+    if(query === "undefined") {
+      query = "";
+    }
+    console.log("query: " + query);
+
+    let querySelector = SearchUtils.getFilterQuery(query);
+    querySelector.filter.parentCardId = cardId;
+
     var cardHandle = Meteor.subscribe('currentCard', cardId);
     var hashtagsHandle = Meteor.subscribe('hashtags');
-    query.filter.parentCardId = cardId;
-    var messageCardsHandle = Meteor.subscribe('cards', query);
+    var tabsHandle = Meteor.subscribe('tabs', cardId);
+    var messageCardsHandle = Meteor.subscribe('cards', querySelector);
+
     var data = {
-      loading: !(cardHandle.ready() && messageCardsHandle.ready() && hashtagsHandle.ready()),
+      loading: !(cardHandle.ready() && messageCardsHandle.ready() && hashtagsHandle.ready() && tabsHandle.ready()),
       currentCard: Cards.findOne(cardId),
-      messageCards: SearchUtils.filterCards(query).fetch(),
-      hashtags: Hashtags.find().fetch()
+      messageCards: SearchUtils.filterCards(querySelector).fetch(),
+      hashtags: Hashtags.find().fetch(),
+      tabs: Tabs.find().fetch(),
+      query
     };
     return data;
   }, CardDetailPage);

@@ -55,7 +55,8 @@ Meteor.methods({
       floatValue,
       userId: Meteor.userId(),
       username: Meteor.user().username,
-      createdAt: now
+      createdAt: now,
+      updatedAt: now
     };
     console.log("--- tag: " + JSON.stringify(tag, null, 2));
     var hashtagId = Hashtags.insert(tag);
