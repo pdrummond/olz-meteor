@@ -141,6 +141,7 @@ Cards.helpers = {
     var typeClassName = 'comments';
     switch(type) {
       case 'discussion': typeClassName = 'comments'; break;
+      case 'project': typeClassName = 'diamond'; break;
       case 'comment': typeClassName = 'comment'; break;
       case 'story': typeClassName = 'newspaper'; break;
       case 'journal': typeClassName = 'book'; break;
@@ -165,6 +166,7 @@ Cards.helpers = {
     let color = '#BABABA';
     switch(type) {
       case 'discussion': color = '#026AA7'; break;
+      case 'project': color = '#2196F3'; break;
       case 'comment': color = '#009688'; break;
       case 'story': color = '#00BCD4'; break;
       case 'journal': color = '#375BC8'; break;

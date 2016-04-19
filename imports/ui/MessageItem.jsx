@@ -74,6 +74,9 @@ export default class MessageItem extends Component {
       case 'feature': newType = 'bug'; break;
       case 'bug': newType = 'question'; break;
       case 'question': newType = 'comment'; break;
+
+      case 'discussion': newType = 'project'; break;
+      case 'project': newType = 'discussion'; break;
     }
     Meteor.call('cards.updateType', this.props.card._id, newType);
   }
