@@ -55,7 +55,7 @@ export default class MessageItem extends Component {
             </div> : ''}
             <div className="extra text" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( prune(this.props.card.content, 500 )) }>
             </div>
-            {this.props.card.content.length > 500 ? <a href="" style={{position:'relative', top:'10px'}}>(Read More...)</a> : ''}
+            {this.props.card.content.length > 500 ? <a href="" style={{position:'relative', top:'10px'}}><i className="right arrow icon"></i> Read More...</a> : ''}
             </div>
 
           <div className="meta">

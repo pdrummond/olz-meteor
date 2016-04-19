@@ -11,6 +11,7 @@ import MessageBox from './MessageBox';
 import MessageItem from './MessageItem';
 import TabItem from './TabItem';
 import MemberItem from './MemberItem';
+import { prune } from 'underscore.string';
 
 import MarkdownUtils from '../utils/MarkdownUtils';
 import SearchUtils from '../utils/SearchUtils';
@@ -19,6 +20,9 @@ class CardDetailPage extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      longFormMode: false
+    }
   }
 
   componentDidMount() {
@@ -34,7 +38,7 @@ class CardDetailPage extends Component {
   render() {
     return (
       <div id="card-detail-page" className="full-height">
-        <div className={this.props.loading?"ui vertical loading segment full-height":"ui vertical segment full-height"} style={{padding:'0px'}}>
+        <div id="card-detail-page-segment" className={this.props.loading?"ui vertical loading segment full-height":"ui vertical segment full-height"} style={{padding:'0px'}}>
           <div className="ui fluid card ols-card-detail">
 
             <div className="content">
@@ -74,14 +78,16 @@ class CardDetailPage extends Component {
                 </span>:''}
               </div>
               <div className="content">
-                <div className="description markdown-content">
+                <div id="card-detail-content" className="description markdown-content">
                   <div className="ui transparent fluid input">
                     <h1 className="title">{!this.props.loading?this.props.currentCard.title:""}</h1>
                   </div>
-                  {!this.props.loading?<div dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( this.props.currentCard.content ) }></div>:""}
+                  {!this.props.loading?<div dangerouslySetInnerHTML={this.getCardContent()}></div>:""}
+                  {!this.props.loading && !this.state.longFormMode ? <a href="" onClick={() => {this.setState({longFormMode:true})}} style={{position:'relative', top:'5px'}}><i className="expand icon"></i> Read More...</a> : ''}
+                  {!this.props.loading && this.state.longFormMode ? <a href="" onClick={() => {this.setState({longFormMode:false})}} style={{position:'relative', top:'5px'}}><i className="compress icon"></i> Read Less...</a> : ''}
                 </div>
               </div>
-              <div className="extra content footer">                
+              <div className="extra content footer">
                 <div className="ui right floated" >
                   {this.renderMembers()}
                 </div>
@@ -110,11 +116,20 @@ class CardDetailPage extends Component {
 
             <div id="message-list" ref="messageList" className="ui feed">
               {this.renderMessageItems()}
+              {this.state.longFormMode ? <button style={{marginLeft:'20px'}} className="ui teal button" onClick={()=>{this.setState({longFormMode:!this.state.longFormMode})}}><i className="comment icon"></i> Add Message</button> :''}
             </div>
-            <MessageBox card={this.props.currentCard} onMessageCreated={this.scrollBottom.bind(this)}/>
+            {this.state.longFormMode?'':<MessageBox card={this.props.currentCard} onMessageCreated={this.scrollBottom.bind(this)}/>}
           </div>
         </div>
       );
+    }
+
+    getCardContent() {
+      if(this.state.longFormMode) {
+        return MarkdownUtils.markdownToHTML(this.props.currentCard.content);
+      } else {
+        return MarkdownUtils.markdownToHTML( prune(this.props.currentCard.content, 500));
+      }
     }
 
     renderTabs() {
