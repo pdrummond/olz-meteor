@@ -4,28 +4,42 @@
     font-size:16px;
 }
 
-#main-content .content .markdown-content h1 {
+#main-content .content .markdown-content h1.title{
+    margin-top:10px;
     color: orange;
-    font-size: 25px;
+    font-size: 28px;
     font-weight: bold;
+}
+
+#main-content .content .markdown-content h1.title input {
+    color: orange;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+#main-content .content .markdown-content h1 {
+    color: #008575;
+    font-size: 23px;
+    font-weight: 400;
 }
 
 #main-content .content .markdown-content h2 {
-    color: orange;
+    color: #008575;
     font-size: 20px;
-    font-weight: bold;
+    font-weight: 400;
 }
 
 #main-content .content .markdown-content h3 {
-    color: orange;
+    color: #008575;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 400;
 }
 
 #main-content .content .markdown-content h4 {
-    color: orange;
+    color: #008575;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 400;
 }
 
 

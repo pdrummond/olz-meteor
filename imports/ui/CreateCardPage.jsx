@@ -25,16 +25,6 @@ class CreateCardPage extends Component {
     } else {
       return (
         <div className="container feed-page-wrapper">
-          {/*<LeftSidebar homeSection={this.props.homeSection} groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>*/}
-          <div>
-            <div className="ui secondary menu">
-              <div className="header item">
-                <h1 style={{color:'#f0ad4e'}}><i className="plus icon"></i> Create Card</h1>
-              </div>
-              <div className="right menu">
-              </div>
-            </div>
-          </div>
           <div className="ui fluid card">
             <div className="content">
               <div className="ui right floated buttons">
@@ -44,14 +34,14 @@ class CreateCardPage extends Component {
               </div>
               <button style={{marginRight:'10px'}} className="ui right floated basic blue icon button popup-label" data-title="This card is private" data-content="Only you and the users you choose to add as members will be able to see this."><i className="privacy icon"></i></button>
 
-              <img className="ui avatar image" src="http://semantic-ui.com/images/avatar/large/elliot.jpg"/> <span className="card-header-label"><span className="user-fullname-label">Paul Drummond</span>  is creating a new card...</span>
+              <img className="ui avatar image" src="http://semantic-ui.com/images/avatar/large/elliot.jpg"/> <span className="card-header-label"><span className="user-fullname-label">@{Meteor.user().username}</span>  is creating a new card...</span>
               </div>
               <div className="content">
                 <div className="description">
-                  <div className="ui transparent fluid input">
-                    <h1 style={{width:'100%', marginLeft:'10px'}}><input style={{width:'100%'}} ref="titleRef" type="text" placeholder="Title..."/></h1>
+                  <div className="ui transparent fluid input markdown-content">
+                    <h1 className="title" style={{width:'100%', marginLeft:'10px'}}><input style={{width:'100%'}} ref="titleRef" type="text" placeholder="Title..."/></h1>
                   </div>
-                  <ProseEditor onChange={(content) => {this.setState({content})}} placeholder="Description..."/>
+                  <ProseEditor className="markdown-content" onChange={(content) => {this.setState({content})}} placeholder="Description..."/>
                 </div>
               </div>
               <div className="extra content">

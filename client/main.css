@@ -85,6 +85,11 @@
 
 .ProseMirror {
   border: none;
+  height:100%;
+}
+
+.ProseMirror-content {
+  outline:none;  
 }
 
 #main-layout .ols-card {

@@ -12,6 +12,7 @@ import MessageItem from './MessageItem';
 import TabItem from './TabItem';
 import MemberItem from './MemberItem';
 
+import MarkdownUtils from '../utils/MarkdownUtils';
 import SearchUtils from '../utils/SearchUtils';
 
 class CardDetailPage extends Component {
@@ -75,27 +76,12 @@ class CardDetailPage extends Component {
               <div className="content">
                 <div className="description markdown-content">
                   <div className="ui transparent fluid input">
-                    <h1>{!this.props.loading?this.props.currentCard.title:""}</h1>
+                    <h1 className="title">{!this.props.loading?this.props.currentCard.title:""}</h1>
                   </div>
-                  <div>
-                    {!this.props.loading?this.props.currentCard.content:""}
-                  </div>
+                  {!this.props.loading?<div dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( this.props.currentCard.content ) }></div>:""}
                 </div>
               </div>
-              <div className="extra content footer">
-                <div className="ui icon top left pointing dropdown mini basic button">
-                  <i className="slack icon popup-label" title="Hashtag options"></i>
-                  <div className="menu">
-                    <div className="item">
-                      Add Hashtag
-                    </div>
-                    <div className="divider"></div>
-                    <div className="ui left large icon input">
-                      <i className="slack icon"></i>
-                      <input type="text" placeholder="Add tag here"/>
-                    </div>
-                  </div>
-                </div>
+              <div className="extra content footer">                
                 <div className="ui right floated" >
                   {this.renderMembers()}
                 </div>

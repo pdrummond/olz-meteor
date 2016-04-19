@@ -145,7 +145,7 @@ Meteor.methods({
           throw new Meteor.Error('not-authenticated');
       }
 
-      Cards.update(cardId, { $set: { type } });
+      Cards.update(cardId, { $set: { type, updatedAt: new Date() } });
   }
 
 });

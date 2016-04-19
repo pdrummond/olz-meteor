@@ -50,7 +50,7 @@ export default class MessageItem extends Component {
             <div className="markdown-content">
             {this.props.card.title && this.props.card.title.length > 0 ?
             <div className="ui transparent fluid input">
-              <h1>{this.props.card.title}</h1>
+              <h1 className="title">{this.props.card.title}</h1>
             </div> : ''}
             <div className="extra text" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( this.props.card.content ) }>
             </div>
