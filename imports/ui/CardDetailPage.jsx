@@ -6,9 +6,11 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Cards } from '../api/cards';
 import { Hashtags } from '../api/hashtags';
 import { Tabs } from '../api/tabs';
+import { Members } from '../api/members';
 import MessageBox from './MessageBox';
 import MessageItem from './MessageItem';
 import TabItem from './TabItem';
+import MemberItem from './MemberItem';
 
 import SearchUtils from '../utils/SearchUtils';
 
@@ -37,12 +39,28 @@ class CardDetailPage extends Component {
             <div className="content">
               <div className="ui right floated icon top left pointing dropdown mini basic button">
                 <i className="vertical ellipsis icon"></i>
+                {!this.props.loading && this.props.currentCard.parentCardId == null ?
                 <div className="menu">
                   <div className="item">Edit Card</div>
                   <div className="item">Archive Card</div>
                   <div className="divider"></div>
                   <div className="item">Delete Card</div>
+                  <div className="divider"></div>
+                  <div className="header" style={{fontSize:'12px'}}>ADD MEMBER</div>
+                  <div className="ui left huge labeled input">
+                    <div className="ui label">@</div>
+                    <input ref="memberInput" onKeyDown={this.onMemberKeyDown.bind(this)} placeholder="Type username here"/>
+                  </div>
                 </div>
+                    :
+                  <div className="menu">
+                    <div className="item">Edit Card</div>
+                    <div className="item">Archive Card</div>
+                    <div className="divider"></div>
+                    <div className="item">Delete Card</div>
+                  </div>
+                }
+
               </div>
 
               <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.currentCard)}/>
@@ -78,17 +96,8 @@ class CardDetailPage extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="ui right floated icon top left pointing dropdown mini basic button">
-                  <i className="users icon" title="Add Members"></i>
-                  <div className="menu">
-                    <div className="item">Jenny Hess</div>
-                    <div className="item">Harold Tester</div>
-                    <div className="divider"></div>
-                    <div className="ui left large icon input">
-                      <i className="users icon"></i>
-                      <input type="text" placeholder="Add member here"/>
-                    </div>
-                  </div>
+                <div className="ui right floated" >
+                  {this.renderMembers()}
                 </div>
               </div>
             </div>
@@ -131,6 +140,12 @@ class CardDetailPage extends Component {
     renderMessageItems() {
       return this.props.messageCards.map((card) => (
         <MessageItem hashtags={this.props.hashtags} key={card._id} card={card}/>
+      ));
+    }
+
+    renderMembers() {
+      return this.props.members.map((member) => (
+        <MemberItem key={member._id} member={member}/>
       ));
     }
 
@@ -181,6 +196,21 @@ class CardDetailPage extends Component {
         FlowRouter.go('cardDetailPage', {cardId: this.props.currentCard._id}, {'query': encodeURIComponent(e.target.value)});
       }.bind(this), 500);
     }
+
+    onMemberKeyDown(event) {
+      if (event.keyCode === 13 && event.shiftKey == false) {
+        let username = event.target.value.trim().replace('@', '');
+        if(username.length > 0) {
+          Meteor.call('members.insert', username, this.props.currentCard._id, function(err) {
+              if(err) {
+                  alert("Error adding member: " + err.reason);
+              } else {
+                  this.refs.memberInput.value = '';
+              }
+          }.bind(this));
+        }
+      }
+    }
   }
 
   export default createContainer(() => {
@@ -197,14 +227,16 @@ class CardDetailPage extends Component {
     var cardHandle = Meteor.subscribe('currentCard', cardId);
     var hashtagsHandle = Meteor.subscribe('hashtags');
     var tabsHandle = Meteor.subscribe('tabs', cardId);
-    var messageCardsHandle = Meteor.subscribe('cards', querySelector);
+    var messageCardsHandle = Meteor.subscribe('messageCards', querySelector);
+    var membersHandle = Meteor.subscribe('members', cardId);
 
     var data = {
-      loading: !(cardHandle.ready() && messageCardsHandle.ready() && hashtagsHandle.ready() && tabsHandle.ready()),
+      loading: !(cardHandle.ready() && messageCardsHandle.ready() && hashtagsHandle.ready() && tabsHandle.ready() && membersHandle.ready()),
       currentCard: Cards.findOne(cardId),
-      messageCards: SearchUtils.filterCards(querySelector).fetch(),
+      messageCards: SearchUtils.filterCards(Meteor.userId(), querySelector, 'messageCards').fetch(),
       hashtags: Hashtags.find().fetch(),
       tabs: Tabs.find().fetch(),
+      members: Members.find().fetch(),
       query
     };
     return data;

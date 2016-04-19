@@ -154,7 +154,7 @@ FeedPage.propTypes = {
 export default createContainer((props) => {
   var query = Session.get('query') || {};
   console.log("QUERY: " + JSON.stringify(query));
-  var cardsHandle = Meteor.subscribe('cards', query);
+  var cardsHandle = Meteor.subscribe('homeCards', query);
   var hashtagsHandle = Meteor.subscribe('hashtags');
   var data = {
     loading: !(cardsHandle.ready() && hashtagsHandle.ready()),

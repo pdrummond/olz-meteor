@@ -1,5 +1,6 @@
 import { Cards } from '../api/cards';
 import { Hashtags } from '../api/hashtags';
+import { Members } from '../api/members';
 
 export default SearchUtils = {
   getFilterQuery(filterString) {
@@ -52,18 +53,36 @@ export default SearchUtils = {
     return result;
   },
 
-  filterCards(opts) {
-    let cardIds = [];
+  filterCards(userId, opts, pubType) {
+    var sort = (pubType == 'homeCards' ? { sort: { updatedAt: -1 } } : { sort: { createdAt: 1 } });
     opts.filter = opts.filter || {};
-    if(!_.isEmpty(opts.hashtags) ) {
+    let allowedCardIds = null;
+    console.log("userId: " + userId);
+    //Firstly, we check if there are any hashtags to filter on and build a list of allowed card
+    if(!_.isEmpty(opts.hashtags)) {
+      allowedCardIds = [];
       Hashtags.find({name: {$in: opts.hashtags}}).forEach(function (hashtag) {
         let card = Cards.findOne(hashtag.cardId);
-        cardIds.push(card._id);
+        allowedCardIds.push(card._id);
       });
-
-      opts.filter._id = {$in: cardIds};
     }
-    console.log("BOOM:" + JSON.stringify(opts.filter));
-    return Cards.find(opts.filter);
+    //Now we build up a list of cards that the user is allowed to see based on membership
+    //(and only add them if they are already in the allowedCardIds)
+    let cardIds = [];
+    Members.find({userId}).forEach(function (member) {
+      let cards = Cards.find({outerCardId: member.cardId}).fetch();
+      cards.forEach((card) => {
+        if(allowedCardIds == null) {
+          cardIds.push(card._id);
+        } else if(_.contains(allowedCardIds, card._id)) {
+          cardIds.push(card._id);
+        }
+      });
+    });
+
+    console.log("cardIds: " + JSON.stringify(cardIds));
+    opts.filter._id = {$in: cardIds};
+    console.log("FILTER:" + JSON.stringify(opts.filter));
+    return Cards.find(opts.filter, sort);
   }
 }

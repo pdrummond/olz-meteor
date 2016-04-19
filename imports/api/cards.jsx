@@ -3,15 +3,19 @@ import { Mongo } from 'meteor/mongo';
 import React, { Component, PropTypes } from 'react';
 import { check, Match } from 'meteor/check';
 import { slugify } from 'underscore.string';
-
+import { Members } from './members';
 import { Hashtags } from './hashtags';
 import SearchUtils from '../utils/SearchUtils';
 
 export const Cards = new Mongo.Collection('Cards');
 
 if (Meteor.isServer) {
-  Meteor.publish('cards', function(opts) {
-    return SearchUtils.filterCards(opts);
+  Meteor.publish('homeCards', function(opts) {
+    return SearchUtils.filterCards(this.userId, opts, 'homeCards');
+  });
+
+  Meteor.publish('messageCards', function(opts) {
+    return SearchUtils.filterCards(this.userId, opts, 'messagesCards');
   });
 
   //Publish card and all its children
@@ -74,6 +78,11 @@ Meteor.methods({
       seq = Cards.find({outerCardId}).count()+1;
     }
 
+    let owner = null;
+    if(!parentCardId) {
+      owner = Meteor.user().username;
+    }
+
     console.log("-- parentCardId: " + parentCardId);
     console.log("-- outerCardId: " + outerCardId);
 
@@ -87,11 +96,28 @@ Meteor.methods({
       seq,
       outerCardId,
       parentCardId,
+      owner,
       createdAt: now,
       updatedAt: now,
       userId: Meteor.userId(),
       username: Meteor.user().username
     });
+    //Update the parent card when a child is added so it appears at the top home list.
+    if( cardId != null && parentCardId != null) {
+        Cards.update(parentCardId, { $set: {updatedAt: now}});
+    }
+    //If this is an outercard, then add the owner as a member.
+    if(cardId != null && parentCardId == null) {
+      Members.insert({
+          userId: Meteor.userId(),
+          username: Meteor.user().username,
+          role:'owner',
+          cardId,
+          createdAt: now,
+          updatedAt: now
+      });
+    }
+
     console.log("< cards.insert");
     return cardId;
   },

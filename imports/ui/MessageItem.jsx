@@ -20,7 +20,7 @@ export default class MessageItem extends Component {
 
   render() {
     return (
-      <div id="message-item" className="event">
+      <div id="message-item" className={this.props.card.parentCardId==null?"outercard event":"innercard event"}>
         <div className="label">
           <img className="avatar" src={Cards.helpers.getUserProfileImage(this.props.card)}>
           </img>
@@ -34,11 +34,11 @@ export default class MessageItem extends Component {
                 <div className="ui icon top left pointing dropdown mini basic button right floated">
                   <i className="vertical ellipsis icon popup-label" title="Hashtag options"></i>
                   <div className="menu">
-                    <div className="item">
-                      Add Hashtag
-                    </div>
+                    <div className="item">Edit Card</div>
+                    <div className="item">Delete Card</div>
                     <div className="divider"></div>
-                    <div className="ui left large labeled input">
+                    <div className="header" style={{fontSize:'12px'}}>ADD HASHTAG</div>
+                    <div className="ui left huge labeled input">
                       <div className="ui label">#</div>
                       <input ref="hashtagInput" onKeyDown={this.onHashtagKeyDown.bind(this)} placeholder="Type hashtag here"/>
                     </div>
