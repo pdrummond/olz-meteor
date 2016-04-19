@@ -8,7 +8,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Cards } from '../api/cards';
 import { Hashtags } from '../api/hashtags';
 
-import FeedItem from './FeedItem';
+import MessageItem from './MessageItem';
 import SearchUtils from '../utils/SearchUtils';
 
 class FeedPage extends Component {
@@ -20,7 +20,7 @@ class FeedPage extends Component {
   renderCards() {
     if(this.props.cards.length > 0) {
       return this.props.cards.map((card) => (
-        <FeedItem hashtags={this.props.hashtags} users={this.props.users} key={card._id} card={card}/>
+        <MessageItem hashtags={this.props.hashtags} users={this.props.users} key={card._id} card={card}/>
       ));
     } else {
       if(Meteor.userId()) {
@@ -87,8 +87,11 @@ class FeedPage extends Component {
             </div>
           </div>
           {this.renderSignUpMessage()}
-          <div className={this.props.loading?"feed-page ui vertical loading segment":"feed-page vertical segment"}>
-              {!this.props.loading?this.renderCards():''}
+          <div className={this.props.loading?"feed-page ui vertical loading segment full-height":"feed-page vertical segment full-height"}>
+            {!this.props.loading?
+              <div id="message-list" ref="messageList" className="ui feed full-height">
+                {this.renderCards()}
+              </div>:''}
           </div>
         </div>
       );

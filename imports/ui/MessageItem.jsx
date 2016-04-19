@@ -47,7 +47,13 @@ export default class MessageItem extends Component {
                 {Cards.helpers.renderCardKeySpan(this.props.card, 1)}
             </div>
             </div>
-            <div className="extra text markdown-content" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( this.props.card.content ) }>
+            <div className="markdown-content">
+            {this.props.card.title && this.props.card.title.length > 0 ?
+            <div className="ui transparent fluid input">
+              <h1>{this.props.card.title}</h1>
+            </div> : ''}
+            <div className="extra text" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( this.props.card.content ) }>
+            </div>
             </div>
 
           <div className="meta">
