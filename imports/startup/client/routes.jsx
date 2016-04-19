@@ -6,6 +6,7 @@ import MainLayout from '../../ui/MainLayout.jsx';
 
 import FeedPage from '../../ui/FeedPage.jsx';
 import CreateCardPage from '../../ui/CreateCardPage.jsx';
+import EditCardPage from '../../ui/EditCardPage.jsx';
 import CardDetailPage from '../../ui/CardDetailPage.jsx';
 
 import JoinPage from '../../ui/JoinPage.jsx';
@@ -21,10 +22,19 @@ FlowRouter.route('/', {
 });
 
 FlowRouter.route('/cards/create', {
-    name: 'feedPage',
+    name: 'createCardPage',
     action() {
         mount(MainLayout, {
             main: () => <CreateCardPage/>
+        });
+    },
+});
+
+FlowRouter.route('/card/:cardId/edit', {
+    name: 'editCardPage',
+    action() {
+        mount(MainLayout, {
+            main: () => <EditCardPage/>
         });
     },
 });

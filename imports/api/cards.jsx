@@ -122,6 +122,27 @@ Meteor.methods({
     return cardId;
   },
 
+  'cards.update'(cardId, title, content, type) {
+    console.log("> cards.update");
+    check(cardId, String);
+    check(title, Match.Optional(String));
+    check(content, String);
+    check(type, String);
+
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authenticated');
+    }
+
+    Cards.update(cardId, { $set: {
+      title,
+      content,
+      type,
+      updatedAt: new Date(),
+      updatedByUserId: Meteor.userId(),
+      updatedByUsername: Meteor.user().username
+    }});
+  },
+
   'cards.remove'(cardId) {
     check(cardId, String);
 

@@ -46,7 +46,7 @@ class CardDetailPage extends Component {
                 <i className="vertical ellipsis icon"></i>
                 {!this.props.loading && this.props.currentCard.parentCardId == null ?
                 <div className="menu">
-                  <div className="item">Edit Card</div>
+                  <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
                   <div className="item">Archive Card</div>
                   <div className="divider"></div>
                   <div className="item">Delete Card</div>
@@ -59,7 +59,7 @@ class CardDetailPage extends Component {
                 </div>
                     :
                   <div className="menu">
-                    <div className="item">Edit Card</div>
+                    <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
                     <div className="item">Archive Card</div>
                     <div className="divider"></div>
                     <div className="item">Delete Card</div>

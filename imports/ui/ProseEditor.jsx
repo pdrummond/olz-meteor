@@ -12,6 +12,10 @@ export default class ProseEditor extends React.Component {
     };
   }
 
+  componentDidMount() {
+      this.setState({content: this.props.content});
+  }
+
   onContentChange(content) {
       this.setState({content});
       this.props.onChange(this.state.content);
