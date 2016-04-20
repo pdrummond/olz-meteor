@@ -48,6 +48,7 @@ class CardDetailPage extends Component {
                 <div className="menu">
                   <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
                   <div className="item">Archive Card</div>
+                  {this.props.currentCard.parentCardId == null ? <div className="item" onClick={this.handleChangeCardKeyClicked.bind(this)}>Change Card Key</div> : ''}
                   <div className="divider"></div>
                   <div className="item">Delete Card</div>
                   <div className="divider"></div>
@@ -83,8 +84,8 @@ class CardDetailPage extends Component {
                     <h1 className="title">{!this.props.loading?this.props.currentCard.title:""}</h1>
                   </div>
                   {!this.props.loading?<div dangerouslySetInnerHTML={this.getCardContent()}></div>:""}
-                  {!this.props.loading && this.props.currentCard.content.length > 500 && !this.state.longFormMode ? <a href="" onClick={() => {this.setState({longFormMode:true})}} style={{position:'relative', top:'5px'}}><i className="expand icon"></i> Read More...</a> : ''}
-                  {!this.props.loading && this.props.currentCard.content.length > 500 && this.state.longFormMode ? <a href="" onClick={() => {this.setState({longFormMode:false})}} style={{position:'relative', top:'5px'}}><i className="compress icon"></i> Read Less...</a> : ''}
+                  {!this.props.loading && this.props.currentCard.content.length > 500 && !this.state.longFormMode ? <a className="read-more" href="" onClick={() => {this.setState({longFormMode:true})}}><i className="expand icon"></i> Read More...</a> : ''}
+                  {!this.props.loading && this.props.currentCard.content.length > 500 && this.state.longFormMode ? <a className="read-less" href="" onClick={() => {this.setState({longFormMode:false})}}><i className="compress icon"></i> Read Less...</a> : ''}
                 </div>
               </div>
               <div className="extra content footer">
@@ -210,6 +211,17 @@ class CardDetailPage extends Component {
               }
           }.bind(this));
         }
+      }
+    }
+
+    handleChangeCardKeyClicked() {
+      var key = prompt("Enter key", this.props.currentCard.key);
+      if(key != null) {
+        Meteor.call('cards.updateKey', this.props.currentCard._id, key, function(err) {
+            if(err) {
+                alert(err.reason);
+            }
+        }.bind(this));
       }
     }
   }

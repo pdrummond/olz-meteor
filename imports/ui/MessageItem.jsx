@@ -53,9 +53,9 @@ export default class MessageItem extends Component {
             <div className="ui transparent fluid input">
               <h1 className="title">{this.props.card.title}</h1>
             </div> : ''}
-            <div className="extra text" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( prune(this.props.card.content, 500 )) }>
+            <div className="extra text" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( prune(this.props.card.content, 300 )) }>
             </div>
-            {this.props.card.content.length > 500 ? <a href="" style={{position:'relative', top:'10px'}}><i className="right arrow icon"></i> Read More...</a> : ''}
+            {this.props.card.content.length > 300 ? <a href="" className="read-more"><i className="right arrow icon"></i> Read More...</a> : ''}
             </div>
 
           <div className="meta">

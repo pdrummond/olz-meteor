@@ -143,6 +143,27 @@ Meteor.methods({
     }});
   },
 
+  'cards.updateKey'(cardId, key) {
+    console.log("> cards.updateKey");
+    check(cardId, String);
+    check(key, String);
+
+    key = slugify(key.trim()).replace('-', '').toUpperCase();
+
+    if(Cards.findOne({key}) != null) {
+      throw new Meteor.Error('key-exists', 'Sorry, "' + key + '" has already been taken');
+    }
+
+    Cards.update(cardId, { $set: {
+      key,
+      updatedAt: new Date(),
+      updatedByUserId: Meteor.userId(),
+      updatedByUsername: Meteor.user().username
+    }});
+
+    console.log("< cards.updateKey");
+  },
+
   'cards.remove'(cardId) {
     check(cardId, String);
 
