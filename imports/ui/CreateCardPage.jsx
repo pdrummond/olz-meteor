@@ -65,16 +65,11 @@ class CreateCardPage extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="ui right floated selection create-card-dropdown dropdown">
-                  <input type="hidden" value="project"/>
+                <div id="type-dropdown" className="ui right floated selection create-card-dropdown dropdown">
+                  <input type="hidden" defaultValue="project"/>
                     <i className="dropdown icon"></i>
                     <div className="default text">Select Card Type...</div>
-                    <div className="menu">
-                      <div className="item" data-value="project"><i className="adjust icon"></i> Project</div>
-                      <div className="item" data-value="discussion"><i className="comments icon"></i> Discussion</div>
-                      <div className="item" data-value="story"><i className="book icon"></i> Story</div>
-                      <div className="item" data-value="card"><i className="square icon"></i> Card</div>
-                    </div>
+                    {this.renderCardTypeItems()}
                   </div>
               <img className="ui avatar image" src="http://semantic-ui.com/images/avatar/large/elliot.jpg"/> <span className="card-header-label"><span className="user-fullname-label">@{Meteor.user().username}</span>  is creating a new card...</span>
               </div>
@@ -93,6 +88,28 @@ class CreateCardPage extends Component {
           </div>
         );
     }
+  }
+
+  renderCardTypeItems() {
+      return (
+        <div className="menu">
+          <div className="item" data-value="project"><i className="adjust icon"></i> Project</div>
+          <div className="item" data-value="repo"><i className="code icon"></i> Code Repository</div>
+          <div className="item" data-value="organisation"><i className="building outline icon"></i> Organisation</div>
+          <div className="item" data-value="discussion"><i className="comments icon"></i> Discussion</div>
+          <div className="item" data-value="story"><i className="newspaper icon"></i> Story</div>
+          <div className="item" data-value="journal"><i className="book icon"></i> Journal</div>
+          <div className="item" data-value="card"><i className="square icon"></i> Card</div>
+          <div className="divider"></div>
+          <div className="item" data-value="comment"><i className="comment icon"></i> Comment</div>
+          <div className="item" data-value="task"><i className="warning circle icon"></i> Task</div>
+          <div className="item" data-value="feature"><i className="bullseye icon"></i> Feature</div>
+          <div className="item" data-value="problem"><i className="bomb icon"></i> Problem</div>
+          <div className="item" data-value="question"><i className="help circle icon"></i> Question</div>
+          <div className="item" data-value="idea"><i className="idea icon"></i> Idea</div>
+          <div className="item" data-value="announcement"><i className="announcement icon"></i> Announcement</div>
+        </div>
+      );
   }
 
   onHashtagKeyDown(event) {
@@ -127,9 +144,9 @@ class CreateCardPage extends Component {
 
   handleCreateCardButton() {
     const title = ReactDOM.findDOMNode(this.refs.titleRef).value.trim();
-    const type = 'project'; //outercards always default to project for now.
+    const type = $('#type-dropdown').dropdown('get value');
 
-    if(this.state.content) {
+    if(title || this.state.content) {
       Meteor.call('cards.insert', title, this.state.content, type, function(err, cardId) {
         if(err) {
           alert("Error adding card: " + err.reason);

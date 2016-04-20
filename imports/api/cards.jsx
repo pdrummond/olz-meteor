@@ -208,6 +208,8 @@ Cards.helpers = {
   getCardTypeIconClassName(type) {
     var typeClassName = 'comments';
     switch(type) {
+      case 'organisation': typeClassName = 'building outline'; break;
+      case 'repo': typeClassName = 'code'; break;
       case 'project': typeClassName = 'adjust'; break;
       case 'discussion': typeClassName = 'comments'; break;
       case 'story': typeClassName = 'newspaper'; break;
@@ -232,7 +234,7 @@ Cards.helpers = {
   },
 
   getCardTypeIconColor(type) {
-    let color = '#BABABA';
+    let color = 'black';
     switch(type) {
       case 'discussion': color = '#026AA7'; break;
       case 'project': color = '#2196F3'; break;

@@ -96,19 +96,16 @@ class EditCardPage extends Component {
   }
 
   renderCardTypeItems() {
-    if(this.props.card.parentCardId == null) {
       return (
         <div className="menu">
           <div className="item" data-value="project"><i className="adjust icon"></i> Project</div>
+          <div className="item" data-value="repo"><i className="code icon"></i> Code Repository</div>
+          <div className="item" data-value="organisation"><i className="building outline icon"></i> Organisation</div>
           <div className="item" data-value="discussion"><i className="comments icon"></i> Discussion</div>
           <div className="item" data-value="story"><i className="newspaper icon"></i> Story</div>
           <div className="item" data-value="journal"><i className="book icon"></i> Journal</div>
           <div className="item" data-value="card"><i className="square icon"></i> Card</div>
-        </div>
-      );
-    } else {
-      return (
-        <div className="menu">
+          <div className="divider"></div>
           <div className="item" data-value="comment"><i className="comment icon"></i> Comment</div>
           <div className="item" data-value="task"><i className="warning circle icon"></i> Task</div>
           <div className="item" data-value="feature"><i className="bullseye icon"></i> Feature</div>
@@ -118,7 +115,6 @@ class EditCardPage extends Component {
           <div className="item" data-value="announcement"><i className="announcement icon"></i> Announcement</div>
         </div>
       );
-    }
   }
 
   onHashtagKeyDown(event) {
@@ -155,7 +151,7 @@ class EditCardPage extends Component {
     const title = ReactDOM.findDOMNode(this.refs.titleRef).value.trim();
     const type = $('#type-dropdown').dropdown('get value');
 
-    if(this.state.content) {
+    if(title || this.state.content) {
       Meteor.call('cards.update', this.props.card._id, title, this.state.content, type, function(err) {
         if(err) {
           alert("Error editing card: " + err.reason);
