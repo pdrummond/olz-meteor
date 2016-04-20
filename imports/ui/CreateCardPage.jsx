@@ -66,7 +66,7 @@ class CreateCardPage extends Component {
                   </div>
                 </div>
                 <div id="type-dropdown" className="ui right floated selection create-card-dropdown dropdown">
-                  <input type="hidden" defaultValue="project"/>
+                  <input type="hidden" defaultValue={FlowRouter.getQueryParam('parentCardId')?'task':'project'}/>
                     <i className="dropdown icon"></i>
                     <div className="default text">Select Card Type...</div>
                     {this.renderCardTypeItems()}
@@ -145,14 +145,19 @@ class CreateCardPage extends Component {
   handleCreateCardButton() {
     const title = ReactDOM.findDOMNode(this.refs.titleRef).value.trim();
     const type = $('#type-dropdown').dropdown('get value');
+    const parentCardId = FlowRouter.getQueryParam('parentCardId');
 
     if(title || this.state.content) {
-      Meteor.call('cards.insert', title, this.state.content, type, function(err, cardId) {
+      Meteor.call('cards.insert', title, this.state.content, type, parentCardId, function(err, cardId) {
         if(err) {
           alert("Error adding card: " + err.reason);
         } else {
           ReactDOM.findDOMNode(this.refs.titleRef).value = '';
-          FlowRouter.go('/');
+          if(parentCardId) {
+            FlowRouter.go(`/card/${parentCardId}`);
+          } else {
+            FlowRouter.go('/');
+          }
         }
       }.bind(this));
     }

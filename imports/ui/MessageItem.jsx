@@ -36,7 +36,7 @@ export default class MessageItem extends Component {
             <div className="card-header-label" style={{position:'relative'}}>
               <div id="type-label" className="ui tiny label">
                 <i id="type-icon" title={this.props.card.type} style={{cursor:'pointer'}} onClick={this.handleTypeIconClicked.bind(this)} className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{color:Cards.helpers.getCardTypeIconColor(this.props.card.type)}}></i>
-                  <span style={{marginLeft:'20px'}}>{this.props.card.type}</span>
+                  <span id="type-icon-text">{this.props.card.type}</span>
               </div>
               <span className="user-fullname-label">@{this.props.card.username}</span>
               <span style={{marginLeft:'5px'}} className="date">{moment(this.props.card.createdAt).fromNow()}</span>

@@ -101,6 +101,9 @@ class CardDetailPage extends Component {
               {this.renderTabs()}
               <div className="right menu">
                 <div className="item">
+                  <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""} className="ui mini teal button" style={{fontSize:'0.8em'}}><i className="plus icon"></i> Create</a>
+                </div>
+                <div className="item">
                   <div className="ui icon mini input">
                     <input ref="searchInput" type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
                     <i className="search link icon"></i>
