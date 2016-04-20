@@ -242,7 +242,7 @@
 }
 
 #main-content #card-detail-content.longform {
-  padding:0px 50px;
+  padding:0px 0px;
 }
 
 #main-content #card-detail-content.longform p {
@@ -263,7 +263,7 @@
   border: none;
   resize: none;
   outline: none;
-  height:150px;
+  height:calc(100% - 50px);
   margin-left:10px;
 }
 

@@ -16,14 +16,14 @@ import { prune } from 'underscore.string';
 import MarkdownUtils from '../utils/MarkdownUtils';
 import SearchUtils from '../utils/SearchUtils';
 
-const MAX_CONTENT_LENGTH = 1000;
+const MAX_CONTENT_LENGTH = 200;
 
 class CardDetailPage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      longFormMode: false
+      longFormMode: true
     }
   }
 

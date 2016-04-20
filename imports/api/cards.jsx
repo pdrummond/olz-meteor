@@ -5,6 +5,7 @@ import { check, Match } from 'meteor/check';
 import { slugify } from 'underscore.string';
 import { Members } from './members';
 import { Hashtags } from './hashtags';
+import { Tabs } from './tabs';
 import SearchUtils from '../utils/SearchUtils';
 
 export const Cards = new Mongo.Collection('Cards');
@@ -116,6 +117,10 @@ Meteor.methods({
           createdAt: now,
           updatedAt: now
       });
+      if(cardId != null) {
+        Tabs.insert({cardId,title:'All',type:'normal',description:'', icon:'circle',query:'',userId: Meteor.userId(),username: Meteor.user().username, createdAt: now,updatedAt: now});
+        Tabs.insert({cardId,title:'Comments',type:'normal',description:'', icon:'comments',query:'type:comment',userId: Meteor.userId(),username: Meteor.user().username, createdAt: now,updatedAt: now});
+      }
     }
 
     console.log("< cards.insert");

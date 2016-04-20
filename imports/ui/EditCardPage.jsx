@@ -78,8 +78,8 @@ class EditCardPage extends Component {
                   </div>
               <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.card)}/> <span className="card-header-label"><span className="user-fullname-label">@{Meteor.user().username}</span>  is editing {Cards.helpers.renderCardKeySpan(this.props.card, 1)}...</span>
               </div>
-              <div className="content">
-                <div className="description">
+              <div className="content full-height">
+                <div className="description " style={{height:'calc(100% - 80px)'}}>
                   <div className="ui transparent fluid input markdown-content">
                     <h1 className="title" style={{width:'100%', marginLeft:'10px'}}><input style={{width:'100%'}} defaultValue={this.props.card.title} ref="titleRef" type="text" placeholder="Title..."/></h1>
                   </div>
@@ -109,6 +109,7 @@ class EditCardPage extends Component {
           <div className="item" data-value="comment"><i className="comment icon"></i> Comment</div>
           <div className="item" data-value="task"><i className="warning circle icon"></i> Task</div>
           <div className="item" data-value="feature"><i className="bullseye icon"></i> Feature</div>
+          <div className="item" data-value="bug"><i className="bug icon"></i> Bug</div>
           <div className="item" data-value="problem"><i className="bomb icon"></i> Problem</div>
           <div className="item" data-value="question"><i className="help circle icon"></i> Question</div>
           <div className="item" data-value="idea"><i className="idea icon"></i> Idea</div>
