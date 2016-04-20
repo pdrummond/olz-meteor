@@ -74,18 +74,21 @@ class FeedPage extends Component {
                   <a className="item">All Users</a>
                 </div>
               </div>
-              <div className="ui feed-page-dropdown dropdown item">
-                All Types <i className="dropdown icon"></i>
-              <div className="menu">
-                <a className="item">Projects</a>
-                <a className="item">Tasks</a>
-                <a className="item">Comments</a>
-                <div className="divider"></div>
-                <a className="item">All Types</a>
-              </div>
-            </div>
                 <div className="item">
-                  <a href="/cards/create" className="ui teal button"><i className="plus icon"></i> Create</a>
+                  <div className="ui teal buttons">
+                    <a href="/cards/create" className="ui teal button"><i className="plus icon"></i> Create</a>
+                    <div className="ui floating feed-page-dropdown dropdown icon button">
+                      <i className="dropdown icon"></i>
+                      <div className="menu">
+                        <div className="item"><i className="adjust icon"></i> Create Project...</div>
+                        <div className="item"><i className="comments icon"></i> Create Discussion... </div>
+                        <div className="item"><i className="book icon"></i> Create Story... </div>
+                        <div className="divider"></div>
+                        <div className="item"><i className="square icon"></i>Create Generic Card...</div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>

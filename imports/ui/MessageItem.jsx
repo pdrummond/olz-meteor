@@ -26,16 +26,21 @@ export default class MessageItem extends Component {
   render() {
     return (
       <div id="message-item" className={this.props.card.parentCardId==null?"outercard event":"innercard event"}>
+
         <div className="label">
           <img className="avatar" src={Cards.helpers.getUserProfileImage(this.props.card)}>
           </img>
         </div>
         <div className="content">
           <div className="summary">
-            <div className="card-header-label">
-              <i title={this.props.card.type} style={{cursor:'pointer'}} onClick={this.handleTypeIconClicked.bind(this)} className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
+            <div className="card-header-label" style={{position:'relative'}}>
+              <div id="type-label" className="ui tiny label">
+                <i id="type-icon" title={this.props.card.type} style={{cursor:'pointer'}} onClick={this.handleTypeIconClicked.bind(this)} className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{color:Cards.helpers.getCardTypeIconColor(this.props.card.type)}}></i>
+                  <span style={{marginLeft:'20px'}}>{this.props.card.type}</span>
+              </div>
               <span className="user-fullname-label">@{this.props.card.username}</span>
               <span style={{marginLeft:'5px'}} className="date">{moment(this.props.card.createdAt).fromNow()}</span>
+
                 <div className="ui icon top left pointing message-item-dropdown dropdown mini basic button right floated">
                   <i className="vertical ellipsis icon popup-label" title="Hashtag options"></i>
                   <div className="menu">

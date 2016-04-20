@@ -266,3 +266,25 @@
   height:150px;
   margin-left:10px;
 }
+
+#type-icon {
+  font-size: 18px;
+  color: rgb(33, 150, 243);
+  position: absolute;
+  top: 3px;
+  left: 5px;
+
+}
+.create-card-page-wrapper, .edit-card-page-wrapper {
+  height:100%;
+}
+
+.create-card-page-wrapper .card, .edit-card-page-wrapper .card {
+  border: none;
+  box-shadow: none;
+  height: 100%;
+}
+
+.create-card-page-wrapper .card-key-wrapper, .edit-card-page-wrapper .card-key-wrapper {
+  float:none;
+}

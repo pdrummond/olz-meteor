@@ -208,19 +208,20 @@ Cards.helpers = {
   getCardTypeIconClassName(type) {
     var typeClassName = 'comments';
     switch(type) {
+      case 'project': typeClassName = 'adjust'; break;
       case 'discussion': typeClassName = 'comments'; break;
-      case 'project': typeClassName = 'diamond'; break;
-      case 'comment': typeClassName = 'comment'; break;
       case 'story': typeClassName = 'newspaper'; break;
       case 'journal': typeClassName = 'book'; break;
+      case 'card': typeClassName = 'square'; break;
 
+      case 'comment': typeClassName = 'comment'; break;
       case 'task': typeClassName = 'warning circle'; break;
       case 'feature': typeClassName = 'bullseye'; break;
       case 'problem': typeClassName = 'bomb'; break;
       case 'bug': typeClassName = 'bug'; break;
 
       case 'question': typeClassName = 'help circle'; break;
-      case 'idea': typeClassName = 'lightning'; break;
+      case 'idea': typeClassName = 'idea'; break;
 
       case 'announcement': typeClassName = 'announcement'; break;
 
@@ -235,10 +236,11 @@ Cards.helpers = {
     switch(type) {
       case 'discussion': color = '#026AA7'; break;
       case 'project': color = '#2196F3'; break;
-      case 'comment': color = '#009688'; break;
       case 'story': color = '#00BCD4'; break;
       case 'journal': color = '#375BC8'; break;
+      case 'card': color = 'black'; break;
 
+      case 'comment': color = '#009688'; break;
       case 'task': color = '#8BC34A'; break;
       case 'feature': color = '#9C27B0'; break;
       case 'problem': color = '#EB0000'; break;
