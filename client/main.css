@@ -1,4 +1,17 @@
 
+::-webkit-scrollbar {
+    width: 4px;
+    height:4px;
+}
+
+::-webkit-scrollbar-track {
+    background:lightgray;
+}
+
+::-webkit-scrollbar-thumb {
+    background:gray;
+}
+
 #react-root {
   height: 100%;
 }
@@ -6,6 +19,7 @@
 #cover-image-wrapper {
 
 }
+
 
 .cover-image {
 	background-size:cover;
@@ -74,6 +88,7 @@
 #feed-page-wrapper {
   padding:30px;
   height:100%;
+  overflow:hidden;
 }
 
 .card-header-label {
@@ -164,12 +179,18 @@
 }
 
 #message-list {
-
   height: calc(100% - 271px);
   overflow: auto;
-  margin: 10px 0px 10px 0px;
+  margin: 0px 0px 10px 0px;
   padding: 30px 20px 30px 20px;
 }
+
+.feed-page #message-list {
+    height: calc(100% - 35px);
+    margin:0;
+    padding:10px 20px 10px 20px;
+}
+
 
 #message-list > .event > .content .extra.text {
   max-width:none;
