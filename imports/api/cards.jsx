@@ -63,7 +63,7 @@ Meteor.methods({
     */
     let key = null;
     let seq = null;
-    let idealKey = title && title.length > 3 ? title : (content && content.length > 3 ? content.substring(0, 10) : 'CARD'); //CARD is default key if there isn't enough title or content (which is unlikely but possible so we have to consider it here!)
+    let idealKey = title && title.length > 3 ? title.substring(0, 5) : (content && content.length > 3 ? content.substring(0, 10) : 'CARD'); //CARD is default key if there isn't enough title or content (which is unlikely but possible so we have to consider it here!)
     idealKey = slugify(idealKey).replace('-', '').toUpperCase();
     if(!parentCardId) {
       //Generate a unique key for the card

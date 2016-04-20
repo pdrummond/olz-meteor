@@ -10,6 +10,9 @@ class CreateCardPage extends Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      content: ''
+    };
   }
 
   componentDidMount() {
@@ -29,7 +32,7 @@ class CreateCardPage extends Component {
       );
     } else {
       return (
-        <div className="container feed-page-wrapper">
+        <div className="container feed-page-wrapper outercard">
           <div className="ui fluid card">
             <div className="content">
               <div className="ui right floated buttons">
@@ -46,7 +49,8 @@ class CreateCardPage extends Component {
                   <div className="ui transparent fluid input markdown-content">
                     <h1 className="title" style={{width:'100%', marginLeft:'10px'}}><input style={{width:'100%'}} ref="titleRef" type="text" placeholder="Title..."/></h1>
                   </div>
-                  <ProseEditor className="markdown-content" onChange={(content) => {this.setState({content})}} placeholder="Description..."/>
+                  {/*<ProseEditor className="markdown-content" onChange={(content) => {this.setState({content})}} placeholder="Description..."/>*/}
+                  <textarea className="card-content-textarea markdown-content" value={this.state.content} onChange={(e) => {this.setState({content:e.target.value})}} placeholder="Description..."></textarea>
                 </div>
               </div>
               <div className="extra content">
