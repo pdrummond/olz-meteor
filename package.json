@@ -13,6 +13,7 @@
     "react-addons-pure-render-mixin": "^15.0.1",
     "react-dom": "^15.0.1",
     "react-mounter": "^1.2.0",
-    "react-prosemirror": "^0.2.0"
+    "react-prosemirror": "^0.2.0",
+    "underscore.string": "^3.3.4"
   }
 }
