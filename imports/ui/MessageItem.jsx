@@ -49,7 +49,7 @@ export default class MessageItem extends Component {
                     </div>
                   </div>
                 </div>
-                {Cards.helpers.renderCardKeySpan(this.props.card, 1)}
+                {this.props.context == 'card-detail' ? Cards.helpers.renderCardKeySpan(this.props.card, 1) : Cards.helpers.renderCardKeySpan(this.props.card) }
             </div>
             </div>
             <div className="markdown-content" style={{cursor:'pointer'}} onClick={() => {FlowRouter.go(`/card/${this.props.card._id}`);}}>

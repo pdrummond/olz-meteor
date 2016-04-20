@@ -12,6 +12,10 @@ export default class ProseEditor extends React.Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    console.log("BOOM");
+  }
+
   componentDidMount() {
       this.setState({content: this.props.content});
   }

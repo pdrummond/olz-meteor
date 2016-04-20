@@ -16,6 +16,8 @@ import { prune } from 'underscore.string';
 import MarkdownUtils from '../utils/MarkdownUtils';
 import SearchUtils from '../utils/SearchUtils';
 
+const MAX_CONTENT_LENGTH = 1000;
+
 class CardDetailPage extends Component {
 
   constructor(props) {
@@ -38,7 +40,7 @@ class CardDetailPage extends Component {
 
   render() {
     return (
-      <div id="card-detail-page" className="full-height">
+      <div id="card-detail-page" className={this.props.loading==false && this.props.currentCard.parentCardId==null?"outercard full-height":"innercard full-height"}>
         <div id="card-detail-page-segment" className={this.props.loading?"ui vertical loading segment full-height":"ui vertical segment full-height"} style={{padding:'0px'}}>
           <div className="ui fluid card ols-card-detail">
 
@@ -85,8 +87,8 @@ class CardDetailPage extends Component {
                     <h1 className="title">{!this.props.loading?this.props.currentCard.title:""}</h1>
                   </div>
                   {!this.props.loading?<div dangerouslySetInnerHTML={this.getCardContent()}></div>:""}
-                  {!this.props.loading && this.props.currentCard.content.length > 500 && !this.state.longFormMode ? <a className="read-more" href="" onClick={() => {this.setState({longFormMode:true})}}><i className="expand icon"></i> Read More...</a> : ''}
-                  {!this.props.loading && this.props.currentCard.content.length > 500 && this.state.longFormMode ? <a className="read-less" href="" onClick={() => {this.setState({longFormMode:false})}}><i className="compress icon"></i> Read Less...</a> : ''}
+                  {!this.props.loading && this.props.currentCard.content.length > MAX_CONTENT_LENGTH && !this.state.longFormMode ? <a className="read-more" href="" onClick={() => {this.setState({longFormMode:true})}}><i className="expand icon"></i> Read More...</a> : ''}
+                  {!this.props.loading && this.props.currentCard.content.length > MAX_CONTENT_LENGTH && this.state.longFormMode ? <a className="read-less" href="" onClick={() => {this.setState({longFormMode:false})}}><i className="compress icon"></i> Read Less...</a> : ''}
                 </div>
               </div>
               <div className="extra content footer">
@@ -118,7 +120,7 @@ class CardDetailPage extends Component {
 
             <div id="message-list" ref="messageList" className="ui feed">
               {this.renderMessageItems()}
-              {this.state.longFormMode ? <button style={{marginLeft:'20px'}} className="ui teal button" onClick={()=>{this.setState({longFormMode:!this.state.longFormMode})}}><i className="comment icon"></i> Add Message</button> :''}
+              {this.state.longFormMode ? <button style={{margin:'20px 50px'}} className="ui teal button" onClick={()=>{this.setState({longFormMode:!this.state.longFormMode})}}><i className="comment icon"></i> Add Message</button> :''}
             </div>
             {this.state.longFormMode?'':<MessageBox card={this.props.currentCard} onMessageCreated={this.scrollBottom.bind(this)}/>}
           </div>
@@ -130,7 +132,7 @@ class CardDetailPage extends Component {
       if(this.state.longFormMode) {
         return MarkdownUtils.markdownToHTML(this.props.currentCard.content);
       } else {
-        return MarkdownUtils.markdownToHTML( prune(this.props.currentCard.content, 500));
+        return MarkdownUtils.markdownToHTML( prune(this.props.currentCard.content, MAX_CONTENT_LENGTH));
       }
     }
 
@@ -142,7 +144,7 @@ class CardDetailPage extends Component {
 
     renderMessageItems() {
       return this.props.messageCards.map((card) => (
-        <MessageItem hashtags={this.props.hashtags} key={card._id} card={card}/>
+        <MessageItem context="card-detail" hashtags={this.props.hashtags} key={card._id} card={card}/>
       ));
     }
 

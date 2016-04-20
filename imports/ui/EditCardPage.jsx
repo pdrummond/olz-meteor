@@ -15,14 +15,13 @@ class EditCardPage extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-      console.log("EditCardPage NEXT PROPS:" + JSON.stringify(nextProps));
-      this.setState({content: nextProps.card.content});
-  }
-
   componentDidMount() {
+    if(this.props.card) {
+      this.setState({content: this.props.card.content});
+    }
     $(".edit-card-dropdown").dropdown();
     $(".edit-card-popup").popup();
+
   }
 
   componentDidUpdate() {
@@ -55,7 +54,8 @@ class EditCardPage extends Component {
                   <div className="ui transparent fluid input markdown-content">
                     <h1 className="title" style={{width:'100%', marginLeft:'10px'}}><input style={{width:'100%'}} defaultValue={this.props.card.title} ref="titleRef" type="text" placeholder="Title..."/></h1>
                   </div>
-                  <ProseEditor className="markdown-content" content={this.state.content} onChange={(content) => {this.setState({content})}} placeholder="Description..."/>
+                  {/*}<ProseEditor className="markdown-content" content={this.state.content} onChange={(content) => {this.setState({content})}} placeholder="Description..."/>*/}
+                  <textarea className="card-content-textarea markdown-content" value={this.state.content} onChange={(e) => {this.setState({content:e.target.value})}} placeholder="Description..."></textarea>
                 </div>
               </div>
               <div className="extra content">
@@ -87,10 +87,9 @@ class EditCardPage extends Component {
 
   handleSaveCardButton() {
     const title = ReactDOM.findDOMNode(this.refs.titleRef).value.trim();
-    const type = 'discussion'; //cards always default to discussion
 
     if(this.state.content) {
-      Meteor.call('cards.update', this.props.card._id, title, this.state.content, type, function(err) {
+      Meteor.call('cards.update', this.props.card._id, title, this.state.content, this.props.card.type, function(err) {
         if(err) {
           alert("Error editing card: " + err.reason);
         } else {

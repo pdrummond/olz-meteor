@@ -4,34 +4,41 @@
     font-size:16px;
 }
 
-#main-content .content .markdown-content h1.title{
-    color: orange;
-    font-size: 28px;
+#main-content .outercard .content .markdown-content h1.title {
+    color: #4B4B4B;
+    font-size: 30px;
     font-weight: bold;
+}
+
+
+#main-content .innercard .content .markdown-content h1.title {
+    color: orange;
+    font-size: 20px;
+    font-weight: 400;
 }
 
 #main-content .content .markdown-content h1.title input {
     color: orange;
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 400;
 }
 
 
 #main-content .content .markdown-content h1 {
     color: #008575;
-    font-size: 23px;
+    font-size: 18px;
     font-weight: 400;
 }
 
 #main-content .content .markdown-content h2 {
     color: #008575;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 400;
 }
 
 #main-content .content .markdown-content h3 {
     color: #008575;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
 }
 

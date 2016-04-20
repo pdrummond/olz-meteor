@@ -221,6 +221,10 @@
   box-shadow:none;
 }
 
+ #message-item.outercard {
+    background: whitesmoke;
+}
+
 .feed-page #message-item {
   border:1px solid lightgray;
   border-radius:5px;
@@ -252,4 +256,13 @@
 .read-more, .read-less {
   display: block;
   padding: 10px 0px;
+}
+
+.card-content-textarea {
+  width: 100%;
+  border: none;
+  resize: none;
+  outline: none;
+  height:150px;
+  margin-left:10px;
 }

@@ -28,7 +28,7 @@ class FeedPage extends Component {
   renderCards() {
     if(this.props.cards.length > 0) {
       return this.props.cards.map((card) => (
-        <MessageItem hashtags={this.props.hashtags} users={this.props.users} key={card._id} card={card}/>
+        <MessageItem context="card-feed" hashtags={this.props.hashtags} users={this.props.users} key={card._id} card={card}/>
       ));
     } else {
       if(Meteor.userId()) {
