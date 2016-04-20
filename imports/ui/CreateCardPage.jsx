@@ -13,8 +13,13 @@ class CreateCardPage extends Component {
   }
 
   componentDidMount() {
-    $(".ui.dropdown").dropdown();
-    $(".popup-label").popup();
+    $(".create-card-dropdown").dropdown();
+    $(".create-card-popup").popup();
+  }
+
+  componentDidUpdate() {
+    $(".create-card-dropdown").dropdown('refresh');
+    $(".create-card-popup").popup('refresh');
   }
 
   render() {
@@ -32,7 +37,7 @@ class CreateCardPage extends Component {
                 <div className="or"></div>
                 <button className="ui positive button" onClick={this.handleCreateCardButton.bind(this)}>Create</button>
               </div>
-              <button style={{marginRight:'10px'}} className="ui right floated basic blue icon button popup-label" data-title="This card is private" data-content="Only you and the users you choose to add as members will be able to see this."><i className="privacy icon"></i></button>
+              <button style={{marginRight:'10px'}} className="ui right floated basic blue icon button create-card-popup" data-title="This card is private" data-content="Only you and the users you choose to add as members will be able to see this."><i className="privacy icon"></i></button>
 
               <img className="ui avatar image" src="http://semantic-ui.com/images/avatar/large/elliot.jpg"/> <span className="card-header-label"><span className="user-fullname-label">@{Meteor.user().username}</span>  is creating a new card...</span>
               </div>
@@ -45,7 +50,7 @@ class CreateCardPage extends Component {
                 </div>
               </div>
               <div className="extra content">
-                <div className="ui icon top left pointing dropdown button">
+                <div className="ui icon top left pointing create-card-dropdown dropdown button">
                   <i className="slack icon popup-label" title="Hashtag options"></i>
                   <div className="menu">
                     <div className="item">
@@ -53,7 +58,7 @@ class CreateCardPage extends Component {
                     </div>
                   </div>
                 </div>
-                      <div className="ui right floated icon top left pointing dropdown button">
+                      <div className="ui right floated icon top left pointing create-card-dropdown dropdown button">
                         <i className="users icon" title="Add Members"></i>
                         <div className="menu">
                           <div className="item">

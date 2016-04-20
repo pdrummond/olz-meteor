@@ -26,10 +26,11 @@ class CardDetailPage extends Component {
   }
 
   componentDidMount() {
-    $('.ui.dropdown').dropdown({action:'nothing'});
+    $('.card-detail-dropdown').dropdown({action:'hide'});
   }
 
   componentDidUpdate() {
+    $('.card-detail-dropdown').dropdown('refresh');
     let searchInput = ReactDOM.findDOMNode(this.refs.searchInput);
     searchInput.value=this.props.query;
     console.log("componentDidUpdate searchInput is: " + searchInput.value);
@@ -42,7 +43,7 @@ class CardDetailPage extends Component {
           <div className="ui fluid card ols-card-detail">
 
             <div className="content" style={{padding:'10px 20px'}}>
-              <div className="ui right floated icon top left pointing dropdown mini basic button">
+              <div className="ui right floated icon top left pointing card-detail-dropdown dropdown mini basic button">
                 <i className="vertical ellipsis icon"></i>
                 {!this.props.loading && this.props.currentCard.parentCardId == null ?
                 <div className="menu">
@@ -103,7 +104,7 @@ class CardDetailPage extends Component {
                     <i className="search link icon"></i>
                   </div>
                 </div>
-                <div className="ui dropdown item">
+                <div className="ui card-detail-dropdown dropdown item">
                   <i className="vertical ellipsis icon"></i>
                   <div className="menu">
                     <a className="item" onClick={this.handleEditTabClicked.bind(this)}>Edit Tab</a>

@@ -17,6 +17,14 @@ class FeedPage extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    $('.feed-page-dropdown').dropdown({action:'hide'});
+  }
+
+  componentDidUpdate() {
+    $('.feed-page-dropdown').dropdown('refresh');
+  }
+
   renderCards() {
     if(this.props.cards.length > 0) {
       return this.props.cards.map((card) => (
@@ -41,10 +49,6 @@ class FeedPage extends Component {
     }
   }
 
-  componentDidUpdate() {
-    $('.ui.dropdown').dropdown('refresh');
-  }
-
   render() {
       return (
         <div id="feed-page-wrapper" className="container">
@@ -61,7 +65,7 @@ class FeedPage extends Component {
                 </div>
               </div>
               <div className="right menu">
-                <div className="ui dropdown item">
+                <div className="ui feed-page-dropdown dropdown item">
                   All Users <i className="dropdown icon"></i>
                 <div className="menu">
                   <a className="item">@pdrummond</a>
@@ -70,7 +74,7 @@ class FeedPage extends Component {
                   <a className="item">All Users</a>
                 </div>
               </div>
-              <div className="ui dropdown item">
+              <div className="ui feed-page-dropdown dropdown item">
                 All Types <i className="dropdown icon"></i>
               <div className="menu">
                 <a className="item">Projects</a>

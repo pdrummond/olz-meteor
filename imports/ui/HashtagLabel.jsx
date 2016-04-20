@@ -10,15 +10,19 @@ export default class HashtagLabel extends Component {
   }
 
   componentDidMount() {
-    $('.ui.dropdown').dropdown({action:'nothing'});
+    $('.hashtag-dropdown').dropdown({action:'nothing'});
+  }
+
+  componentDidUpdate() {
+    $('.hashtag-dropdown').dropdown('refresh');
   }
 
   render() {
     return (
-      <div className="ui inline dropdown hashtag-label item">
+      <div className="hashtag-dropdown ui inline dropdown hashtag-label item">
         <div className="text">#{this.props.hashtag.name}</div>
         <div className="menu">
-          <div className="item">Change hashtag</div>
+          <div className="item" onClick={this.handleChangeHashTag.bind(this)}>Change hashtag</div>
           <div className="item" onClick={this.handleRemoveClicked.bind(this)}>Remove hashtag</div>
           <div className="divider"></div>
           <div className="header">SUGGESTIONS</div>
@@ -57,6 +61,19 @@ export default class HashtagLabel extends Component {
       return suggestions.map((s, idx) => (<div key={idx} data-tag={s} onClick={this.handleTagClicked.bind(this)} className="item">#{s}</div>));
     } else {
       return (<div key={1} className="item"><i>No Suggestions</i></div>);
+    }
+  }
+
+  handleChangeHashTag() {
+    var hashtag = prompt('Change hashtag:', this.props.hashtag.name);
+    if(hashtag != null) {
+      Meteor.call('hashtags.update', this.props.hashtag._id, hashtag, function(err) {
+        if(err) {
+          alert("Error changing hashtag: " + err.reason);
+        } else {
+          $('.hashtag-dropdown').dropdown('hide');
+        }
+      });
     }
   }
 

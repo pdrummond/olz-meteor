@@ -16,7 +16,11 @@ export default class MessageItem extends Component {
   }
 
   componentDidMount() {
-    $('.ui.dropdown').dropdown();
+    $('.message-item-dropdown').dropdown({action:'nothing'});
+  }
+
+  componentDidUpdate() {
+    $('.message-item-dropdown').dropdown('refresh');
   }
 
   render() {
@@ -32,7 +36,7 @@ export default class MessageItem extends Component {
               <i title={this.props.card.type} style={{cursor:'pointer'}} onClick={this.handleTypeIconClicked.bind(this)} className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
               <span className="user-fullname-label">@{this.props.card.username}</span>
               <span style={{marginLeft:'5px'}} className="date">{moment(this.props.card.createdAt).fromNow()}</span>
-                <div className="ui icon top left pointing dropdown mini basic button right floated">
+                <div className="ui icon top left pointing message-item-dropdown dropdown mini basic button right floated">
                   <i className="vertical ellipsis icon popup-label" title="Hashtag options"></i>
                   <div className="menu">
                     <div className="item">Edit Card</div>

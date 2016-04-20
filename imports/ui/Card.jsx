@@ -12,7 +12,7 @@ export default class Card extends Component {
   }
 
   componentDidMount() {
-    $('.ui.dropdown').dropdown();
+    //$('.ui.dropdown').dropdown();
   }
 
   render() {

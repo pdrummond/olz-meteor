@@ -21,8 +21,13 @@ class EditCardPage extends Component {
   }
 
   componentDidMount() {
-    $(".ui.dropdown").dropdown();
-    $(".popup-label").popup();
+    $(".edit-card-dropdown").dropdown();
+    $(".edit-card-popup").popup();
+  }
+
+  componentDidUpdate() {
+    $(".edit-card-dropdown").dropdown('refresh');
+    $(".edit-card-popup").popup('refresh');
   }
 
   render() {
@@ -41,7 +46,7 @@ class EditCardPage extends Component {
                 <div className="or"></div>
                 <button className="ui positive button" onClick={this.handleSaveCardButton.bind(this)}>Save</button>
               </div>
-              <button style={{marginRight:'10px'}} className="ui right floated basic blue icon button popup-label" data-title="This card is private" data-content="Only you and the users you choose to add as members will be able to see this."><i className="privacy icon"></i></button>
+              <button style={{marginRight:'10px'}} className="ui right floated basic blue icon button edit-card-popup" data-title="This card is private" data-content="Only you and the users you choose to add as members will be able to see this."><i className="privacy icon"></i></button>
 
               <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.card)}/> <span className="card-header-label"><span className="user-fullname-label">@{Meteor.user().username}</span>  is editing {Cards.helpers.renderCardKeySpan(this.props.card, 1)}...</span>
               </div>
@@ -54,7 +59,7 @@ class EditCardPage extends Component {
                 </div>
               </div>
               <div className="extra content">
-                <div className="ui icon top left pointing dropdown button">
+                <div className="ui icon top left pointing edit-card-dropdown dropdown button">
                   <i className="slack icon popup-label" title="Hashtag options"></i>
                   <div className="menu">
                     <div className="item">
@@ -62,7 +67,7 @@ class EditCardPage extends Component {
                     </div>
                   </div>
                 </div>
-                      <div className="ui right floated icon top left pointing dropdown button">
+                      <div className="ui right floated icon top left pointing edit-card-dropdown dropdown button">
                         <i className="users icon" title="Add Members"></i>
                         <div className="menu">
                           <div className="item">
