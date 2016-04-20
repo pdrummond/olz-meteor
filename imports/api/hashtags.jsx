@@ -64,6 +64,54 @@ Meteor.methods({
     return hashtagId;
   },
 
+  'hashtags.update'(tagId, hashtag) {
+    console.log("> hashtags.update");
+    check(tagId, String);
+    check(hashtag, String);
+
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authenticated');
+    }
+
+    let name = slugify(hashtag);
+    let type = 'basic';
+    let value = null;
+    let intValue = null;
+    let floatValue = null;
+    if(hashtag.indexOf(':') != -1) {
+      type = 'value-string';
+      let split = hashtag.split(':');
+      name = split[0];
+      value = split[1];
+      floatValue = parseFloat(value);
+      if(isNan(floatValue)) {
+        floatValue = null;
+        intValue = parseInt(value);
+        if(isNan(intValue)) {
+          intValue = null;
+        } else {
+          type = 'value-int';
+        }
+      } else {
+        type = 'value-float';
+      }
+    }
+        
+    var tag = {
+      name,
+      type,
+      value,
+      intValue,
+      floatValue,
+      updatedAtUserId: Meteor.userId(),
+      updatedAtUsername: Meteor.user().username,
+      updatedAt: new Date()
+    };
+    console.log("--- tag: " + JSON.stringify(tag, null, 2));
+    Hashtags.update(tagId, {$set: tag});
+    console.log("< hashtags.update");
+  },
+
   'hashtags.remove'(hashtagId) {
     check(hashtagId, String);
 

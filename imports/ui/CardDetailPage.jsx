@@ -26,7 +26,7 @@ class CardDetailPage extends Component {
   }
 
   componentDidMount() {
-    $('.ui.dropdown').dropdown();
+    $('.ui.dropdown').dropdown({action:'nothing'});
   }
 
   componentDidUpdate() {
