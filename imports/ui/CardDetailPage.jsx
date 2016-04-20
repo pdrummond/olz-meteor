@@ -41,7 +41,7 @@ class CardDetailPage extends Component {
         <div id="card-detail-page-segment" className={this.props.loading?"ui vertical loading segment full-height":"ui vertical segment full-height"} style={{padding:'0px'}}>
           <div className="ui fluid card ols-card-detail">
 
-            <div className="content">
+            <div className="content" style={{padding:'10px 20px'}}>
               <div className="ui right floated icon top left pointing dropdown mini basic button">
                 <i className="vertical ellipsis icon"></i>
                 {!this.props.loading && this.props.currentCard.parentCardId == null ?
@@ -68,7 +68,7 @@ class CardDetailPage extends Component {
 
               </div>
 
-              <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.currentCard)}/>
+              <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.currentCard)} style={{width:'1.5em', height:'1.5em'}}/>
               {!this.props.loading?
                 <span className="card-header-label">
                   <i className={Cards.helpers.getCardTypeIconClassName(this.props.currentCard.type)} style={{position:'relative', top:'1px', marginLeft:'10px', color:Cards.helpers.getCardTypeIconColor(this.props.currentCard.type), fontSize:'16px'}}></i>
@@ -77,7 +77,7 @@ class CardDetailPage extends Component {
                   {Cards.helpers.renderCardKeySpan(this.props.currentCard)}
                 </span>:''}
               </div>
-              <div className="content">
+              <div className="content" style={{padding: '0px 20px 10px 20px', borderTop:'none'}}>
                 <div id="card-detail-content" className={this.state.longFormMode?"longform description markdown-content":"description markdown-content"}>
                   <div className="ui transparent fluid input">
                     <h1 className="title">{!this.props.loading?this.props.currentCard.title:""}</h1>
@@ -93,11 +93,11 @@ class CardDetailPage extends Component {
                 </div>
               </div>
             </div>
-            <div className="ui secondary pointing small menu" style={{padding:'0px 10px'}}>
+            <div className="ui secondary pointing small menu" style={{padding:'0px', margin:'0px'}}>
               {this.renderTabs()}
               <div className="right menu">
                 <div className="item">
-                  <div className="ui icon input">
+                  <div className="ui icon mini input">
                     <input ref="searchInput" type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
                     <i className="search link icon"></i>
                   </div>

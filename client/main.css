@@ -110,9 +110,11 @@
 #main-content .ols-card-detail {
   border: none;
   box-shadow: none;
+  margin-bottom:0px;
 }
 
 .ols-card-detail .footer {
+  padding: 4px !important;
   background-color:whitesmoke !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important
 }
@@ -150,9 +152,10 @@
 }
 
 #message-list {
-  padding:10px;
-  height: calc(100% - 500px);
+  height: calc(100% - 271px);
   overflow: auto;
+  margin: 0;
+  padding: 0px 20px;
 }
 
 #message-list > .event > .content .extra.text {

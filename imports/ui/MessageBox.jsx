@@ -18,7 +18,7 @@ export default class MessageBox extends Component {
         return (
             <div className="message-box" style={{top: (this.state.zenMode?'10px':'auto')}}>
                 <textarea
-                    style={{height: (this.state.zenMode?'calc(100% - 40px)':'150px')}}
+                    style={{height: (this.state.zenMode?'calc(100% - 40px)':'50px')}}
                     onChange={this.onChange.bind(this)}
                     onKeyDown={this.onKeyDown.bind(this)}
                     type="text"
