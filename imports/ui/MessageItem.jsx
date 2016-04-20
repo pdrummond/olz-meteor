@@ -62,7 +62,7 @@ export default class MessageItem extends Component {
             {this.props.card.content.length > 300 ? <a href="" className="read-more"><i className="right arrow icon"></i> Read More...</a> : ''}
             </div>
 
-          <div className="meta">
+          <div className="meta" style={{display:this.props.hashtags.length>0?'block':'none'}}>
             <span className="hashtags">
               {this.renderHashtags()}
             </span>
