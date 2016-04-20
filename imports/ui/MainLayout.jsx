@@ -16,8 +16,9 @@ class MainLayout extends Component {
             <div id="cover-image-back" className="cover-image"></div>
           </div>
           <div id="main-layout-content" className="full-height">
-
+            <a href="/" style={{position:'fixed', zIndex:'999', top:'5px', left: '5px'}}><img src="/images/logo.png" style={{width:'30px'}}></img></a>
             <div id="top-banner">
+
               {this.renderUserButtons()}
             </div>
 
@@ -32,9 +33,8 @@ class MainLayout extends Component {
   renderUserButtons() {
     if(this.props.currentUser) {
       return (
-        <div className="ui dropdown item">
+        <div className="ui right pointing dropdown item">
           <img className="ui avatar image" src={this.props.currentUser.profileImage}/>
-          <span style={{color:'white', fontWeight:'bold'}}>{this.props.currentUser.username}</span>
           <div className="menu">
             <div className="item" onClick={() => {Meteor.logout()}}>Logout</div>
           </div>

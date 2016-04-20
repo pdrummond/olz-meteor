@@ -20,7 +20,8 @@
 
 #cover-image-front {
   	opacity:1;
-    background: url("/images/default.jpg");
+    xbackground: url("/images/default.jpg");
+    background: #ABC3CC;
 }
 
 #cover-image-back {
@@ -30,7 +31,7 @@
 #top-banner {
   position: fixed;
   z-index: 10;
-  background-color: rgba(128, 128, 128, 0.5);
+  xbackground-color: rgba(128, 128, 128, 0.5);
   width: 100%;
   padding: 0;
   margin: 0;
@@ -42,20 +43,31 @@
   height: 100%;
 }
 
+/*#main-content {
+    background-color: #FCFCFC;
+    z-index: 3;
+    transition: all 0.1s ease-in-out;
+    box-shadow: 0px 0px 100px -10px black;
+    margin: auto auto;
+    border-radius: 5px;
+    overflow: auto;
+    height: 100%;
+}*/
+
 #main-content {
   padding:0;
   position: relative;
   min-width: 600px;
-  top: 80px;
+  top: 30px;
   background-color: #FCFCFC;
   z-index: 3;
   padding-bottom: 0px;
   transition: all 0.1s ease-in-out;
   box-shadow: 0px 0px 100px -10px black;
   margin: auto auto;
-  width: 80%;
+  width: 90%;
   border-radius: 5px;
-  height: calc(100% - 130px);
+  height: calc(100% - 60px);
   overflow:auto;
 }
 
