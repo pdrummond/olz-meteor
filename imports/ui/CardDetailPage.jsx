@@ -222,16 +222,20 @@ class CardDetailPage extends Component {
     }
 
     getCurrentTab() {
+      const defaultTabOptions = {
+        showMessageBox:true,
+        messageBoxLabel:'Add Message',
+        showCreateButton: false,
+        createButtonLabel: 'Create'
+      };
+
       let tab = _.findWhere(this.props.tabs, {query: this.props.query});
       if(tab == null) {
         tab = {
-          tabOptions: {
-            showMessageBox:true,
-            messageBoxLabel:'Add Message',
-            showCreateButton: false,
-            createButtonLabel: 'Create'
-          }
+          tabOptions: defaultTabOptions
         };
+      } else if(tab.tabOptions == null) {
+        tab.tabOptions = defaultTabOptions;
       }
       return tab;
     }
