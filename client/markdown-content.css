@@ -4,23 +4,14 @@
     font-size:16px;
 }
 
-#main-content .outercard .content .markdown-content h1.title, #main-content .outercard .content .markdown-content h1.title input {
+#main-content .content .markdown-content h1.title, #main-content .content .markdown-content h1.title input {
     color: #4B4B4B;
     font-size: 30px;
     font-weight: bold;
 }
 
-
-#main-content .innercard .content .markdown-content h1.title, #main-content .innercard .content .markdown-content h1.title input {
-    color: orange;
-    font-size: 20px;
-    font-weight: 400;
-}
-
-
-
 #main-content .content .markdown-content h1 {
-    color: #008575;
+    color: #4B4B4B;
     font-size: 18px;
     font-weight: 400;
 }

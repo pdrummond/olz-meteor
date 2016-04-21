@@ -128,7 +128,7 @@ Meteor.methods({
 
       Tabs.insert({cardId,title:'All',type:'normal',description:'', icon:'circle',query:'', tabOptions: allTabOptions, userId: Meteor.userId(), username: Meteor.user().username, createdAt: now,updatedAt: now});
       Tabs.insert({cardId,title:'Comments',type:'normal',description:'', icon:'comments',query:'type:comment', tabOptions: commentTabOptions, userId: Meteor.userId(),username: Meteor.user().username, createdAt: now,updatedAt: now});
-    }  
+    }
     console.log("< cards.insert");
     return cardId;
   },
@@ -232,6 +232,7 @@ Cards.helpers = {
       case 'organisation': typeClassName = 'building outline'; break;
       case 'repo': typeClassName = 'code'; break;
       case 'project': typeClassName = 'adjust'; break;
+      case 'milestone': typeClassName = 'flag'; break;
       case 'discussion': typeClassName = 'comments'; break;
       case 'story': typeClassName = 'newspaper'; break;
       case 'journal': typeClassName = 'book'; break;

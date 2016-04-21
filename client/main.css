@@ -221,10 +221,6 @@
   box-shadow:none;
 }
 
- #message-item.outercard {
-    background: whitesmoke;
-}
-
 .feed-page #message-item {
   border:1px solid lightgray;
   border-radius:5px;

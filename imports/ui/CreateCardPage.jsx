@@ -99,6 +99,7 @@ class CreateCardPage extends Component {
           <div className="item" data-value="project"><i className="adjust icon"></i> Project</div>
           <div className="item" data-value="repo"><i className="code icon"></i> Code Repository</div>
           <div className="item" data-value="organisation"><i className="building outline icon"></i> Organisation</div>
+          <div className="item" data-value="milestone"><i className="flag icon"></i> Milestone</div>
           <div className="item" data-value="discussion"><i className="comments icon"></i> Discussion</div>
           <div className="item" data-value="story"><i className="newspaper icon"></i> Story</div>
           <div className="item" data-value="journal"><i className="book icon"></i> Journal</div>
