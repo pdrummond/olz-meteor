@@ -200,9 +200,9 @@
 
 #message-item .avatar {
   position: relative;
-  top: 20px;
-  left: 10px;
-  width: 2em;
+  top: 10px;
+  left: 5px;
+  width: 2.5em;
 }
 
 .hashtag-label {
@@ -263,23 +263,12 @@
   margin-left:10px;
 }
 
-#type-icon {
-  font-size: 18px;
-  color: rgb(33, 150, 243);
-  position: absolute;
-  top: 3px;
-  left: 5px;
-}
-
-#type-label {
-  background-color:transparent;
-}
 
 #type-icon-text {
-  margin-left: 18px;
   font-size: 12px;
   text-transform: uppercase;
   font-weight: bold;
+  margin-right:5px;
 }
 
 .create-card-page-wrapper, .edit-card-page-wrapper {
