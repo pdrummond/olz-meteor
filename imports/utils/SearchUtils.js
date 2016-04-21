@@ -16,7 +16,10 @@ export default SearchUtils = {
       var value = match.length > 2 && match[2] != null ? match[2].trim().replace(':', '') : null;
       console.log("-- field: " + field);
       console.log("-- value: " + value);
-      remainingText = remainingText.replace(field, '');
+      //We want to remove the match from the remaining text if its a hashtags or a key:value pair.
+      if(field.startsWith('#') || value != null) {
+        remainingText = remainingText.replace(field, '');
+      }
       if(value != null) {
         remainingText = remainingText.replace(value, '');
       }
@@ -88,7 +91,7 @@ export default SearchUtils = {
 
     console.log("cardIds: " + JSON.stringify(cardIds));
     opts.filter._id = {$in: cardIds};
-    console.log("FILTER:" + JSON.stringify(opts.filter));
+    //console.log("FILTER:" + JSON.stringify(opts.filter));
     return Cards.find(opts.filter, sort);
   }
 }
