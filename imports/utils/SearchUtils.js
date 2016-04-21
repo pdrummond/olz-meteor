@@ -40,7 +40,7 @@ export default SearchUtils = {
       }
       match = re.exec(filterString);
     }
-    if(remainingText && remainingText.length > 0) {
+    if(remainingText && remainingText.trim().length > 0) {
       filter["$or"] = [{title: {$regex:remainingText}}, {content: {$regex:remainingText}}];
     }
     console.log("getFilterQuery: Current client-side item filter is: " + JSON.stringify(filter));

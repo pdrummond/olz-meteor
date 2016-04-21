@@ -74,6 +74,25 @@ class EditTabPage extends Component {
                 </div>
               </div>
             </div>
+            <h4 className="ui dividing header">Misc Options</h4>
+            <div className="ui segment">
+              <div class="fields">
+                <div className="field">
+                  <div className="ui edit-tab-page-toggle toggle checkbox">
+                    <input ref="showReadMoreInput" type="checkbox" className="hidden" defaultChecked={this.props.tab.tabOptions?this.props.tab.tabOptions.showReadMore:true}/>
+                    <label>Show Read More for longform content</label>
+                  </div>
+                  <div className="ui edit-tab-page-toggle toggle checkbox">
+                    <input ref="autoScrollBottomInput" type="checkbox" className="hidden" defaultChecked={this.props.tab.tabOptions?this.props.tab.tabOptions.autoScrollBottom:true}/>
+                    <label>Automatic Scroll Bottom</label>
+                  </div>
+                </div>
+                <div className="field">
+                  <label>New Card Type</label>
+                  <input ref="newCardTypeInput" defaultValue={this.props.tab.tabOptions?this.props.tab.tabOptions.newCardType:'comment'} placeholder="comment"/>
+                </div>
+              </div>
+            </div>
           </form>
 
           <div className="actions" style={{marginTop:'30px'}}>
@@ -99,7 +118,10 @@ class EditTabPage extends Component {
       showMessageBox: ReactDOM.findDOMNode(this.refs.showMessageBoxInput).checked,
       messageButtonLabel: ReactDOM.findDOMNode(this.refs.messageButtonLabelInput).value.trim(),
       showCreateButton: ReactDOM.findDOMNode(this.refs.showCreateButtonInput).checked,
-      createButtonLabel: ReactDOM.findDOMNode(this.refs.createButtonLabelInput).value.trim()
+      createButtonLabel: ReactDOM.findDOMNode(this.refs.createButtonLabelInput).value.trim(),
+      showReadMore: ReactDOM.findDOMNode(this.refs.showReadMoreInput).checked,
+      autoScrollBottom: ReactDOM.findDOMNode(this.refs.autoScrollBottomInput).value.trim(),
+      newCardType: ReactDOM.findDOMNode(this.refs.newCardTypeInput).value.trim()
     }
 
     if(title.length) {

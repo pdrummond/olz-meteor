@@ -243,7 +243,10 @@ class CardDetailPage extends Component {
         showMessageBox:true,
         messageBoxLabel:'Add Message',
         showCreateButton: false,
-        createButtonLabel: 'Create'
+        createButtonLabel: 'Create',
+        autoScrollBottom: true,
+        newCardType: 'comment',
+        showReadMore: true
       };
 
       let tab = _.findWhere(this.props.tabs, {query: this.props.query});
