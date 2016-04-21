@@ -22,6 +22,8 @@ class EditCardPage extends Component {
     $(".edit-card-dropdown").dropdown();
     $(".edit-card-popup").popup();
 
+    ReactDOM.findDOMNode(this.refs.contentTextArea).focus();
+
   }
 
   componentDidUpdate() {
@@ -84,7 +86,7 @@ class EditCardPage extends Component {
                     <h1 className="title" style={{width:'100%', marginLeft:'10px'}}><input style={{width:'100%'}} defaultValue={this.props.card.title} ref="titleRef" type="text" placeholder="Title..."/></h1>
                   </div>
                   {/*}<ProseEditor className="markdown-content" content={this.state.content} onChange={(content) => {this.setState({content})}} placeholder="Description..."/>*/}
-                  <textarea className="card-content-textarea markdown-content" value={this.state.content} onChange={(e) => {this.setState({content:e.target.value})}} placeholder="Description..."></textarea>
+                  <textarea ref="contentTextArea" className="card-content-textarea markdown-content" value={this.state.content} onChange={(e) => {this.setState({content:e.target.value})}} placeholder="Description..."></textarea>
                 </div>
               </div>
               <div className="extra content">

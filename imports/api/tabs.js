@@ -9,11 +9,15 @@ if (Meteor.isServer) {
   Meteor.publish('tabs', function(cardId) {
     return Tabs.find({cardId});
   });
+
+  Meteor.publish('currentTab', function(tabId) {
+    return Tabs.find({_id: tabId});
+  });
 }
 
 Meteor.methods({
 
-  'tabs.insert'(title, type, description, icon, query, cardId) {
+  'tabs.insert'(title, type, description, icon, query, cardId, tabOptions) {
     console.log("> tabs.insert");
     check(title, String);
     check(type, String);
@@ -21,6 +25,7 @@ Meteor.methods({
     check(icon, String);
     check(query, String);
     check(cardId, String);
+    check(tabOptions, Object);
 
     if (! Meteor.userId()) {
       throw new Meteor.Error('not-authenticated');
@@ -33,6 +38,7 @@ Meteor.methods({
       description,
       icon,
       query,
+      tabOptions,
       userId: Meteor.userId(),
       username: Meteor.user().username,
       createdAt: now,
@@ -42,7 +48,7 @@ Meteor.methods({
     return tabId;
   },
 
-  'tabs.update'(tabId, title, type, description, icon, query) {
+  'tabs.update'(tabId, title, type, description, icon, query, tabOptions) {
     console.log("> tabs.update");
     check(tabId, String);
     check(title, String);
@@ -50,6 +56,7 @@ Meteor.methods({
     check(description, String);
     check(icon, String);
     check(query, String);
+    check(tabOptions, Object);
 
     if (! Meteor.userId()) {
       throw new Meteor.Error('not-authenticated');
@@ -61,6 +68,7 @@ Meteor.methods({
       description,
       icon,
       query,
+      tabOptions,
       updatedAt: now
     }});
     console.log("< tabs.update");

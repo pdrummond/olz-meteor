@@ -18,6 +18,9 @@ class CreateCardPage extends Component {
   componentDidMount() {
     $(".create-card-dropdown").dropdown();
     $(".create-card-popup").popup();
+
+    ReactDOM.findDOMNode(this.refs.titleRef).focus();
+
   }
 
   componentDidUpdate() {
@@ -76,7 +79,7 @@ class CreateCardPage extends Component {
               <div className="content full-height">
                 <div className="description" style={{height:'calc(100% - 80px)'}}>
                   <div className="ui transparent fluid input markdown-content">
-                    <h1 className="title" style={{width:'100%', marginLeft:'10px'}}><input style={{width:'100%'}} ref="titleRef" type="text" placeholder="Title..."/></h1>
+                    <h1 className="title" style={{width:'100%', marginLeft:'10px'}}><input style={{width:'100%'}} ref="titleRef" type="text" autofocus placeholder="Title..."/></h1>
                   </div>
                   {/*<ProseEditor className="markdown-content" onChange={(content) => {this.setState({content})}} placeholder="Description..."/>*/}
                   <textarea className="card-content-textarea markdown-content" value={this.state.content} onChange={(e) => {this.setState({content:e.target.value})}} placeholder="Description..."></textarea>

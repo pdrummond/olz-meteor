@@ -2,7 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { createContainer } from 'meteor/react-meteor-data';
+import { prune } from 'underscore.string';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+
 import { Cards } from '../api/cards';
 import { Hashtags } from '../api/hashtags';
 import { Tabs } from '../api/tabs';
@@ -11,19 +13,32 @@ import MessageBox from './MessageBox';
 import MessageItem from './MessageItem';
 import TabItem from './TabItem';
 import MemberItem from './MemberItem';
-import { prune } from 'underscore.string';
 
 import MarkdownUtils from '../utils/MarkdownUtils';
 import SearchUtils from '../utils/SearchUtils';
 
+var Modal = require('react-modal');
+
 const MAX_CONTENT_LENGTH = 200;
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 
 class CardDetailPage extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      longFormMode: true
+      longFormMode: false,
+      openEditModal: true
     }
   }
 
@@ -43,7 +58,6 @@ class CardDetailPage extends Component {
       <div id="card-detail-page" className={this.props.loading==false && this.props.currentCard.parentCardId==null?"outercard full-height":"innercard full-height"}>
         <div id="card-detail-page-segment" className={this.props.loading?"ui vertical loading segment full-height":"ui vertical segment full-height"} style={{padding:'0px'}}>
           <div className="ui fluid card ols-card-detail">
-
             <div className="content" style={{padding:'10px 20px'}}>
               <div className="ui right floated icon top left pointing card-detail-dropdown dropdown mini basic button">
                 <i className="vertical ellipsis icon"></i>
@@ -100,9 +114,7 @@ class CardDetailPage extends Component {
             <div className="ui secondary pointing small menu" style={{padding:'0px', margin:'0px'}}>
               {this.renderTabs()}
               <div className="right menu">
-                <div className="item">
-                  <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""} className="ui mini teal button" style={{fontSize:'0.8em'}}><i className="plus icon"></i> Create</a>
-                </div>
+                {this.renderCreateButton()}
                 <div className="item">
                   <div className="ui icon mini input">
                     <input ref="searchInput" type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
@@ -121,14 +133,43 @@ class CardDetailPage extends Component {
               </div>
             </div>
 
-            <div id="message-list" ref="messageList" className="ui feed">
+            <div id="message-list" ref="messageList" className="ui feed" style={{height: this.getCurrentTab().tabOptions.showMessageBox===true?'calc(100% - 271px)':'calc(100% - 150px)'}}>
               {this.renderMessageItems()}
-              {this.state.longFormMode ? <button style={{margin:'20px 50px'}} className="ui teal button" onClick={()=>{this.setState({longFormMode:!this.state.longFormMode})}}><i className="comment icon"></i> Add Message</button> :''}
             </div>
-            {this.state.longFormMode?'':<MessageBox card={this.props.currentCard} onMessageCreated={this.scrollBottom.bind(this)}/>}
+            {this.renderMessageBox()}
           </div>
         </div>
       );
+    }
+
+    renderCreateButton() {
+      let tabOptions = this.getCurrentTab().tabOptions;
+      if(tabOptions.showCreateButton === true) {
+        return (
+          <div className="item">
+            <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""} className="ui mini teal button" style={{fontSize:'0.8em'}}><i className="plus icon"></i> {tabOptions.createButtonLabel}</a>
+          </div>
+        );
+      }
+    }
+
+    renderMessageBox() {
+      let tabOptions = this.getCurrentTab().tabOptions;
+      if(tabOptions.showMessageBox === true) {
+        if(this.state.longFormMode === true) {
+          return (
+            <button style={{margin:'20px 50px'}} className="ui teal button" onClick={()=>{this.setState({longFormMode:!this.state.longFormMode})}}><i className="comment icon"></i> {tabOptions.messageButtonLabel}</button>
+          );
+        } else {
+          return (
+            <MessageBox card={this.props.currentCard} onMessageCreated={this.scrollBottom.bind(this)}/>
+          );
+        }
+      }
+    }
+
+    showEditTabDialog() {
+      $(window).trigger('#edit-tab-dialog.visible');
     }
 
     getCardContent() {
@@ -158,29 +199,28 @@ class CardDetailPage extends Component {
     }
 
     handleNewTabClicked() {
-      let title = prompt('Enter tab title');
-      let query = prompt('Enter query:');
-      let icon = prompt('Enter icon:');
-      if(title != null) {
-        icon = icon || 'circle';
-        Meteor.call('tabs.insert', title, 'no description', 'normal', icon, query, this.props.currentCard._id);
+      FlowRouter.go(`/card/${this.props.currentCard._id}/tab/create`);
+    }
+
+    getCurrentTab() {
+      let tab = _.findWhere(this.props.tabs, {query: this.props.query});
+      if(tab == null) {
+        tab = {
+          tabOptions: {
+            showMessageBox:true,
+            messageBoxLabel:'Add Message',
+            showCreateButton: false,
+            createButtonLabel: 'Create'
+          }
+        };
       }
+      return tab;
     }
 
     handleEditTabClicked() {
-      let tab = _.findWhere(this.props.tabs, {query: this.props.query});
+      let tab = this.getCurrentTab();
       if(tab) {
-        let title = prompt('Enter tab title', tab.title);
-        if(title != null) {
-          let query = prompt('Enter query:', tab.query);
-          if(query != null) {
-            let icon = prompt('Enter icon:', tab.icon);
-            if(icon != null) {
-                icon = icon || 'circle';
-                Meteor.call('tabs.update', tab._id, title, 'no description', 'normal', icon, query);
-            }
-          }
-        }
+        FlowRouter.go(`/tab/${tab._id}/edit`);
       }
     }
 

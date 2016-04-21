@@ -4,10 +4,13 @@ import { mount } from 'react-mounter';
 
 import MainLayout from '../../ui/MainLayout.jsx';
 
+
 import FeedPage from '../../ui/FeedPage.jsx';
 import CreateCardPage from '../../ui/CreateCardPage.jsx';
 import EditCardPage from '../../ui/EditCardPage.jsx';
 import CardDetailPage from '../../ui/CardDetailPage.jsx';
+import CreateTabPage from '../../ui/CreateTabPage.jsx';
+import EditTabPage from '../../ui/EditTabPage.jsx';
 
 import JoinPage from '../../ui/JoinPage.jsx';
 import LoginPage from '../../ui/LoginPage.jsx';
@@ -44,6 +47,24 @@ FlowRouter.route('/card/:cardId', {
     action() {
         mount(MainLayout, {
             main: () => <CardDetailPage/>
+        });
+    },
+});
+
+FlowRouter.route('/card/:cardId/tab/create', {
+    name: 'createTabPage',
+    action() {
+        mount(CreateTabPage, {
+            main: () => <CreateTabPage/>
+        });
+    },
+});
+
+FlowRouter.route('/tab/:tabId/edit', {
+    name: 'editTabPage',
+    action() {
+        mount(EditTabPage, {
+            main: () => <EditTabPage/>
         });
     },
 });
