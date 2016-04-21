@@ -8,6 +8,14 @@ class MainLayout extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    $('.main-layout-dropdown').dropdown({action:'nothing'});
+  }
+
+  componentDidUpdate() {
+    $('.main-layout-dropdown').dropdown('refresh');
+  }
+
   render() {
       return (
         <div id="main-layout-wrapper" className="full-height">
@@ -33,7 +41,7 @@ class MainLayout extends Component {
   renderUserButtons() {
     if(this.props.currentUser) {
       return (
-        <div className="ui right pointing dropdown item">
+        <div className="ui right pointing main-layout-dropdown dropdown item">
           <img className="ui avatar image" src={this.props.currentUser.profileImage}/>
           <div className="menu">
             <div className="item" onClick={() => {Meteor.logout()}}>Logout</div>
