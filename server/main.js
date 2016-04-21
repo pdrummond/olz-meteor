@@ -4,3 +4,4 @@ import '../imports/api/members';
 import '../imports/api/cards';
 import '../imports/api/hashtags';
 import '../imports/api/tabs';
+import '../imports/api/favourites';

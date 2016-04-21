@@ -67,6 +67,7 @@ class CardDetailPage extends Component {
                   <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                   {this.props.currentCard.parentCardId == null ? <div className="item" onClick={this.handleChangeCardKeyClicked.bind(this)}>Change Card Key</div> : ''}
                   <div className="divider"></div>
+                  <div className="item" onClick={this.handleRemoveFavouriteClicked.bind(this)}>Remove Favourite</div>
                   <div className="item" onClick={this.handleDeleteCardClicked.bind(this)}>Delete Card</div>
                   <div className="divider"></div>
                   <div className="header" style={{fontSize:'12px'}}>ADD MEMBER</div>
@@ -81,6 +82,7 @@ class CardDetailPage extends Component {
                     <div className="item">Archive Card</div>
                     <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                     <div className="divider"></div>
+                    <div className="item" onClick={this.handleRemoveFavouriteClicked.bind(this)}>Remove Favourite</div>
                     <div className="item" onClick={this.handleDeleteCardClicked.bind(this)}>Delete Card</div>
                   </div>
                 }
@@ -261,7 +263,7 @@ class CardDetailPage extends Component {
         FlowRouter.go(`/tab/${tab._id}/edit`);
       }
     }
-    
+
     handleRemoveTabClicked() {
       if(confirm("Are you sure you want to remove the current tab?")) {
         let tab = this.getCurrentTab();
@@ -320,6 +322,14 @@ class CardDetailPage extends Component {
             }
         }.bind(this));
       }
+    }
+
+    handleRemoveFavouriteClicked() {
+      Meteor.call('favourites.remove', this.props.currentCard._id, function(err) {
+        if(err) {
+          alert("Error removing favourite: " + err.reason);
+        }
+      });
     }
 
     handleDeleteCardClicked() {
