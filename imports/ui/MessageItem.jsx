@@ -39,7 +39,7 @@ export default class MessageItem extends Component {
               <span className="user-fullname-label">@{this.props.card.username}</span>
               <span style={{marginLeft:'5px'}} className="date">{moment(this.props.card.createdAt).fromNow()}</span>
               {this.props.card.isOpen == false ? <span className="ui mini label" style={{marginLeft:'5px'}}>CLOSED</span> : ''}
-
+              {this.renderAssignee()}
                 <div className="ui icon top left pointing message-item-dropdown dropdown mini basic button right floated">
                   <i className="vertical ellipsis icon popup-label" title="Hashtag options"></i>
                   <div className="menu">
@@ -74,6 +74,15 @@ export default class MessageItem extends Component {
         </div>
       </div>
       );
+  }
+
+  renderAssignee() {
+    if(this.props.card.assignee) {
+      var assigneeUser = Meteor.users.findOne({username:this.props.card.assignee});
+      return (
+        <img title={"Assigned to @" + this.props.card.assignee} style={{position:'relative', top:'2px', left: '5px', width:'1.3em', height:'1.3em', borderRadius:'10px'}} src={assigneeUser.profileImage}/>
+      );
+    }
   }
 
   handleTypeIconClicked() {

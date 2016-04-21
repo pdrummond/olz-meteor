@@ -67,6 +67,10 @@ class CardDetailPage extends Component {
                   <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                   {this.props.currentCard.parentCardId == null ? <div className="item" onClick={this.handleChangeCardKeyClicked.bind(this)}>Change Card Key</div> : ''}
                   <div className="divider"></div>
+                  <div className="item" onClick={this.handleSetAssigneeClicked.bind(this)}>Set Assignee</div>
+                  <div className="item" onClick={this.handleAssignToMeClicked.bind(this)}>Assign to Me</div>
+                  <div className="item" onClick={this.handleRemoveAssigneeClicked.bind(this)}>Remove Assignee</div>
+                  <div className="divider"></div>
                   <div className="item" onClick={this.handleRemoveFavouriteClicked.bind(this)}>Remove Favourite</div>
                   <div className="item" onClick={this.handleDeleteCardClicked.bind(this)}>Delete Card</div>
                   <div className="divider"></div>
@@ -81,6 +85,10 @@ class CardDetailPage extends Component {
                     <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
                     <div onClick={this.handleToggleOpenClicked.bind(this)} className="item">{!this.props.loading && this.props.currentCard.isOpen?"Close Card":"Reopen Card"}</div>
                     <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
+                      <div className="divider"></div>
+                      <div className="item" onClick={this.handleSetAssigneeClicked.bind(this)}>Set Assignee</div>
+                      <div className="item" onClick={this.handleAssignToMeClicked.bind(this)}>Assign to Me</div>
+                      <div className="item" onClick={this.handleRemoveAssigneeClicked.bind(this)}>Remove Assignee</div>
                     <div className="divider"></div>
                     <div className="item" onClick={this.handleRemoveFavouriteClicked.bind(this)}>Remove Favourite</div>
                     <div className="item" onClick={this.handleDeleteCardClicked.bind(this)}>Delete Card</div>
@@ -96,6 +104,7 @@ class CardDetailPage extends Component {
                   <span className="user-fullname-label">@{this.props.currentCard.username}</span>
                   <span className="date" style={{marginLeft:'5px'}}>{moment(this.props.currentCard.createdAt).fromNow()}</span>
                   {this.props.currentCard.isOpen == false ? <span className="ui mini label" style={{marginLeft:'5px'}}>CLOSED</span> : ''}
+                  {this.renderAssignee()}
                   {Cards.helpers.renderCardKeySpan(this.props.currentCard)}
                 </span>:''}
               </div>
@@ -345,6 +354,22 @@ class CardDetailPage extends Component {
       });
     }
 
+    handleAssignToMeClicked() {
+        Meteor.call('cards.updateAssignee', this.props.currentCard._id, Meteor.user().username);
+    }
+
+    handleRemoveAssigneeClicked() {
+        Meteor.call('cards.removeAssignee', this.props.currentCard._id);
+    }
+
+    handleSetAssigneeClicked() {
+        let assignee = prompt("Enter assignee username:");
+        if(assignee && assignee.trim().length > 0) {
+            assignee = assignee.trim();
+            Meteor.call('cards.updateAssignee', this.props.currentCard._id, assignee);
+        }
+    }
+
     handleDeleteCardClicked() {
       if(confirm("Are you sure you want to delete this card?")) {
         Meteor.call('cards.remove', this.props.currentCard._id, function(err) {
@@ -354,6 +379,15 @@ class CardDetailPage extends Component {
             FlowRouter.go('/');
           }
         });
+      }
+    }
+
+    renderAssignee() {
+      if(this.props.currentCard.assignee) {
+        var assigneeUser = Meteor.users.findOne({username:this.props.currentCard.assignee});
+        return (
+          <img title={"Assigned to @" + this.props.currentCard.assignee} style={{position:'relative', top:'2px', left: '5px', width:'1.3em', height:'1.3em', borderRadius:'10px'}} src={assigneeUser.profileImage}/>
+        );
       }
     }
 

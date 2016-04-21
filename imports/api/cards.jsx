@@ -227,6 +227,27 @@ Meteor.methods({
       Cards.update(cardId, { $set: { type, updatedAt: new Date() } });
   },
 
+  'cards.updateAssignee'(cardId, assignee) {
+      check(cardId, String);
+      check(assignee, String);
+
+      if (! Meteor.userId()) {
+          throw new Meteor.Error('not-authenticated');
+      }
+
+      Cards.update(cardId, { $set: { assignee } });
+  },
+
+  'cards.removeAssignee'(cardId) {
+      check(cardId, String);
+
+      if (! Meteor.userId()) {
+          throw new Meteor.Error('not-authenticated');
+      }
+
+      Cards.update(cardId, {$unset: { assignee : "" }});
+  },
+
   'cards.getHandle'(cardId) {
     let card = Cards.findOne(cardId);
     let outerCard = Cards.findOne(card.outerCardId);
