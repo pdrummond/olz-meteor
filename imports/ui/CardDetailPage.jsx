@@ -128,7 +128,7 @@ class CardDetailPage extends Component {
                     <a className="item" onClick={this.handleEditTabClicked.bind(this)}>Edit Tab</a>
                     <div className="divider"></div>
                     <a className="item" onClick={this.handleNewTabClicked.bind(this)}>New Tab</a>
-                    <a className="item">Remove Tab</a>
+                    <a className="item" onClick={this.handleRemoveTabClicked.bind(this)}>Remove Tab</a>
                   </div>
                 </div>
               </div>
@@ -261,6 +261,19 @@ class CardDetailPage extends Component {
         FlowRouter.go(`/tab/${tab._id}/edit`);
       }
     }
+    
+    handleRemoveTabClicked() {
+      if(confirm("Are you sure you want to remove the current tab?")) {
+        let tab = this.getCurrentTab();
+        if(tab) {
+          Meteor.call('tabs.remove', tab._id, function(err) {
+            if(err) {
+              alert("Error removing tab: " + err.reason);
+            }
+          });
+        }
+      }
+    }
 
     scrollBottom(callback) {
       var self = this;
@@ -320,6 +333,8 @@ class CardDetailPage extends Component {
         });
       }
     }
+
+
   }
 
   export default createContainer(() => {

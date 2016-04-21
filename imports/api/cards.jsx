@@ -104,7 +104,7 @@ Meteor.methods({
       username: Meteor.user().username
     });
     //Update the parent card when a child is added so it appears at the top home list - but earlier than the newly added innercard, hence the need to tweak the date a bit ;-)
-    //UPDATE: Decided to not do this for now to see if it's better without it. 
+    //UPDATE: Decided to not do this for now to see if it's better without it.
     /*if( cardId != null && parentCardId != null) {
         let parentUpdatedAt = new Date(now.getTime() - 5);
         console.log("-- updating parent card with timestamp of " + parentUpdatedAt);
@@ -298,7 +298,7 @@ Cards.helpers = {
       case 'project': typeClassName = 'adjust'; break;
       case 'milestone': typeClassName = 'flag'; break;
       case 'discussion': typeClassName = 'comments'; break;
-      case 'story': typeClassName = 'newspaper'; break;
+      case 'story': typeClassName = 'newspaper'; break;      
       case 'journal': typeClassName = 'book'; break;
       case 'card': typeClassName = 'square'; break;
 
