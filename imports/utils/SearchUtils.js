@@ -9,7 +9,7 @@ export default SearchUtils = {
     var filter = {};
     var remainingText = filterString;
     //var re = new RegExp("([\\w\\.-]+)\\s*:\\s*([\\w\\.-]+)", "g");
-    var re = new RegExp("([\\w\\.@#-]+)\\s*([ :]\\s*([\\w\\.-]+))?", "g");
+    var re = new RegExp("([\\w\\.@#-]+)\\s*([ :]\\s*([\\w\\.,-]+))?", "g");
     var match = re.exec(filterString);
     while (match != null) {
       var field = match[1].trim();
@@ -31,12 +31,16 @@ export default SearchUtils = {
       }
 
       if(value) {
-        if(value == "true") {
-          value = true;
-        } else if(value == "false") {
-          value = false;
+        if(value.indexOf(',') != -1) {
+          filter[field] = {$in: value.split(',')};
+        } else {
+          if(value == "true") {
+            value = true;
+          } else if(value == "false") {
+            value = false;
+          }
+          filter[field] = value;
         }
-        filter[field] = value;
       }
       match = re.exec(filterString);
     }
