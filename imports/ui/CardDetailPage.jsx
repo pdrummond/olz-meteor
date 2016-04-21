@@ -64,6 +64,7 @@ class CardDetailPage extends Component {
                 <div className="menu">
                   <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
                   <div className="item">Archive Card</div>
+                  <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                   {this.props.currentCard.parentCardId == null ? <div className="item" onClick={this.handleChangeCardKeyClicked.bind(this)}>Change Card Key</div> : ''}
                   <div className="divider"></div>
                   <div className="item">Delete Card</div>
@@ -78,6 +79,7 @@ class CardDetailPage extends Component {
                   <div className="menu">
                     <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
                     <div className="item">Archive Card</div>
+                    <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                     <div className="divider"></div>
                     <div className="item">Delete Card</div>
                   </div>
@@ -219,6 +221,19 @@ class CardDetailPage extends Component {
 
     handleNewTabClicked() {
       FlowRouter.go(`/card/${this.props.currentCard._id}/tab/create`);
+    }
+
+    handleMoveCardClicked() {
+      Meteor.call('cards.getHandle', this.props.currentCard.parentCardId, function(err, handle) {
+        let newParentHandle = prompt("Enter handle of card to move this card to (i.e #OLS-42): ", handle);
+        if(newParentHandle != null) {
+          Meteor.call('cards.move', this.props.currentCard._id, newParentHandle, function(err) {
+            if(err) {
+              alert("Error moving card: " + err.reason);
+            }
+          });
+        }
+      }.bind(this));
     }
 
     getCurrentTab() {

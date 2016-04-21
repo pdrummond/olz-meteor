@@ -201,6 +201,69 @@ Meteor.methods({
       Cards.update(cardId, { $set: { type, updatedAt: new Date() } });
   },
 
+  'cards.getHandle'(cardId) {
+    let card = Cards.findOne(cardId);
+    let outerCard = Cards.findOne(card.outerCardId);
+    return `#${outerCard.key}-${card.seq}`;
+  },
+
+  'cards.move'(cardId, parentHandle) {
+    console.log("> cards.move");
+    check(cardId, String);
+    check(parentHandle, String);
+
+    if (! Meteor.userId()) {
+        throw new Meteor.Error('not-authenticated');
+    }
+
+    parentHandle = parentHandle.trim();
+    if(parentHandle.length == 0 || parentHandle.indexOf('-') == -1 || parentHandle.split("-").length != 2) {
+      throw new Meteor.Error('invalid-handle', '"' + parentHandle + '" is not a valid card handle');
+    }
+    let split = parentHandle.split("-");
+    let key = split[0].replace('#', '').toUpperCase();
+    let seq = parseInt(split[1].replace('-', ''));
+
+    if(isNaN(seq)) {
+      throw new Meteor.Error('invalid-seq', '"' + parentHandle + '" is not a valid card number');
+    }
+
+    console.log("-- key for new parent card is: " + key);
+    console.log("-- seq for new parent card is: " + seq);
+
+    var card = Cards.findOne(cardId);
+    console.log("card: " + JSON.stringify(card, null, 2));
+    var outerCard = Cards.findOne(card.outerCardId);
+    console.log('outerCard:' + JSON.stringify(outerCard, null, 2));
+    if(outerCard.key !== key) {
+      throw new Meteor.Error('keys-mismatch', "Cannot move a card to a different outercard");
+
+      /*
+        For now, we don't allow moving cards to different outercards, but adding
+        this feature woudln't be too hard as long as the user is aware the seq
+        of the card would have to change.
+
+        To do this, we need to get the latest sew for the new outer card, so
+        we need to get the newOuterCard somehow, then just get the count like
+        so:
+      */
+      //seq = Cards.find({newOuterCard._id}).count()+1;
+    }
+
+    var newParentCard = Cards.findOne({outerCardId: outerCard._id, seq});
+
+    console.log("OLS-1: " + JSON.stringify(Cards.findOne('kjz2Re66igYRJKGsk'), null, 2));
+
+    if(newParentCard != null) {
+      console.log('-- found parent with id ' + newParentCard._id);
+      Cards.update(cardId, { $set: { parentCardId:newParentCard._id, updatedAt: new Date() } });
+    } else {
+      throw new Meteor.Error('parent-card-not-found', "Could not find card for key=" + key + ", seq=" + seq);
+    }
+
+    console.log("< cards.move");
+  },
+
   'cards.getDefaultTab'(cardId) {
     let tab = null;
     const tabs = Tabs.find({cardId}, {sort: {createdAt:1}}).fetch();

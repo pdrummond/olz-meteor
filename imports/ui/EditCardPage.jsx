@@ -43,7 +43,7 @@ class EditCardPage extends Component {
           <div className="ui fluid card">
             <div className="content" style={{flexGrow:'0'}}>
               <div className="ui right floated buttons">
-                <a href="/" className="ui button">Cancel</a>
+                <a className="ui button" onClick={() => { history.back() }}>Cancel</a>
                 <div className="or"></div>
                 <button className="ui positive button" onClick={this.handleSaveCardButton.bind(this)}>Save</button>
               </div>
