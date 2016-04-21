@@ -86,6 +86,10 @@ class EditTabPage extends Component {
                     <input ref="autoScrollBottomInput" type="checkbox" className="hidden" defaultChecked={this.props.tab.tabOptions?this.props.tab.tabOptions.autoScrollBottom:true}/>
                     <label>Automatic Scroll Bottom</label>
                   </div>
+                  <div className="ui edit-tab-page-toggle toggle checkbox">
+                    <input ref="showClosedCardsInput" type="checkbox" className="hidden" defaultChecked={this.props.tab.tabOptions?this.props.tab.tabOptions.showClosedCards:false}/>
+                    <label>Show Closed Cards</label>
+                  </div>
                 </div>
                 <div className="field">
                   <label>New Card Type</label>
@@ -120,7 +124,8 @@ class EditTabPage extends Component {
       showCreateButton: ReactDOM.findDOMNode(this.refs.showCreateButtonInput).checked,
       createButtonLabel: ReactDOM.findDOMNode(this.refs.createButtonLabelInput).value.trim(),
       showReadMore: ReactDOM.findDOMNode(this.refs.showReadMoreInput).checked,
-      autoScrollBottom: ReactDOM.findDOMNode(this.refs.autoScrollBottomInput).value.trim(),
+      autoScrollBottom: ReactDOM.findDOMNode(this.refs.autoScrollBottomInput).checked,
+      showClosedCards: ReactDOM.findDOMNode(this.refs.showClosedCardsInput).checked,
       newCardType: ReactDOM.findDOMNode(this.refs.newCardTypeInput).value.trim()
     }
 

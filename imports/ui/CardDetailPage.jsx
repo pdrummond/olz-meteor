@@ -63,7 +63,7 @@ class CardDetailPage extends Component {
                 {!this.props.loading && this.props.currentCard.parentCardId == null ?
                 <div className="menu">
                   <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
-                  <div className="item">Archive Card</div>
+                  <div onClick={this.handleToggleOpenClicked.bind(this)} className="item">{!this.props.loading && this.props.currentCard.isOpen?"Close Card":"Reopen Card"}</div>
                   <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                   {this.props.currentCard.parentCardId == null ? <div className="item" onClick={this.handleChangeCardKeyClicked.bind(this)}>Change Card Key</div> : ''}
                   <div className="divider"></div>
@@ -79,7 +79,7 @@ class CardDetailPage extends Component {
                     :
                   <div className="menu">
                     <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
-                    <div className="item">Archive Card</div>
+                    <div onClick={this.handleToggleOpenClicked.bind(this)} className="item">{!this.props.loading && this.props.currentCard.isOpen?"Close Card":"Reopen Card"}</div>
                     <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                     <div className="divider"></div>
                     <div className="item" onClick={this.handleRemoveFavouriteClicked.bind(this)}>Remove Favourite</div>
@@ -95,6 +95,7 @@ class CardDetailPage extends Component {
                   <i className={Cards.helpers.getCardTypeIconClassName(this.props.currentCard.type)} style={{position:'relative', top:'1px', marginLeft:'10px', color:Cards.helpers.getCardTypeIconColor(this.props.currentCard.type), fontSize:'16px'}}></i>
                   <span className="user-fullname-label">@{this.props.currentCard.username}</span>
                   <span className="date" style={{marginLeft:'5px'}}>{moment(this.props.currentCard.createdAt).fromNow()}</span>
+                  {this.props.currentCard.isOpen == false ? <span className="ui mini label" style={{marginLeft:'5px'}}>CLOSED</span> : ''}
                   {Cards.helpers.renderCardKeySpan(this.props.currentCard)}
                 </span>:''}
               </div>
@@ -245,6 +246,7 @@ class CardDetailPage extends Component {
         showCreateButton: false,
         createButtonLabel: 'Create',
         autoScrollBottom: true,
+        showClosedCards: false,
         newCardType: 'comment',
         showReadMore: true
       };
@@ -331,6 +333,14 @@ class CardDetailPage extends Component {
       Meteor.call('favourites.remove', this.props.currentCard._id, function(err) {
         if(err) {
           alert("Error removing favourite: " + err.reason);
+        }
+      });
+    }
+
+    handleToggleOpenClicked() {
+      Meteor.call('cards.toggleOpen', this.props.currentCard._id, function(err) {
+        if(err) {
+          alert("Error opening/closing card: " + err.reason);
         }
       });
     }

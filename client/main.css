@@ -352,3 +352,7 @@
 .create-card-page-wrapper .card-key-wrapper, .edit-card-page-wrapper .card-key-wrapper {
   float:none;
 }
+
+#message-item.closed {
+  background-color:whitesmoke;
+}

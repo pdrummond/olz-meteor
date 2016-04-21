@@ -67,7 +67,9 @@ export default SearchUtils = {
       allowedCardIds = [];
       Hashtags.find({name: {$in: opts.hashtags}}).forEach(function (hashtag) {
         let card = Cards.findOne(hashtag.cardId);
-        allowedCardIds.push(card._id);
+        if(card != null) {
+          allowedCardIds.push(card._id);
+        }
       });
     }
     //Now we build up a list of cards that the user is allowed to see based on membership

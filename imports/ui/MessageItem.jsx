@@ -25,7 +25,7 @@ export default class MessageItem extends Component {
 
   render() {
     return (
-      <div id="message-item" className={this.props.card.parentCardId==null?"outercard event":"innercard event"}>
+      <div id="message-item" className={this.props.card.isOpen?"open event":"closed event"}>
 
         <div className="label">
           <img className="avatar" src={Cards.helpers.getUserProfileImage(this.props.card)}>
@@ -38,6 +38,7 @@ export default class MessageItem extends Component {
               <span id="type-icon-text">{this.props.card.type}</span>
               <span className="user-fullname-label">@{this.props.card.username}</span>
               <span style={{marginLeft:'5px'}} className="date">{moment(this.props.card.createdAt).fromNow()}</span>
+              {this.props.card.isOpen == false ? <span className="ui mini label" style={{marginLeft:'5px'}}>CLOSED</span> : ''}
 
                 <div className="ui icon top left pointing message-item-dropdown dropdown mini basic button right floated">
                   <i className="vertical ellipsis icon popup-label" title="Hashtag options"></i>
@@ -60,7 +61,6 @@ export default class MessageItem extends Component {
             <div className="ui transparent fluid input">
               <h1 className="title">{this.props.card.title}</h1>
             </div> : ''}
-
             <div className="extra text" dangerouslySetInnerHTML={ MarkdownUtils.markdownToHTML( prune(this.props.card.content, 300 )) }>
             </div>
             {this.props.card.content.length > 300 ? <a href="" className="read-more"><i className="right arrow icon"></i> Read More...</a> : ''}

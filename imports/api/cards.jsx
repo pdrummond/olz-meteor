@@ -95,6 +95,7 @@ Meteor.methods({
       type,
       key,
       seq,
+      isOpen:true,
       outerCardId,
       parentCardId,
       owner,
@@ -155,10 +156,34 @@ Meteor.methods({
     }});
   },
 
+  'cards.toggleOpen'(cardId) {
+    check(cardId, String);
+
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authenticated');
+    }
+
+    var card = Cards.findOne(cardId);
+    if(card == null) {
+      throw new Meteor.Error('card-not-found', 'No card found with id=' + cardId);
+    }
+
+    Cards.update(cardId, { $set: {
+      isOpen: !card.isOpen,
+      updatedAt: new Date(),
+      updatedByUserId: Meteor.userId(),
+      updatedByUsername: Meteor.user().username
+    }});
+  },
+
   'cards.updateKey'(cardId, key) {
     console.log("> cards.updateKey");
     check(cardId, String);
     check(key, String);
+
+    if (! Meteor.userId()) {
+      throw new Meteor.Error('not-authenticated');
+    }
 
     key = slugify(key.trim()).replace('-', '').toUpperCase();
 
@@ -298,7 +323,7 @@ Cards.helpers = {
       case 'project': typeClassName = 'adjust'; break;
       case 'milestone': typeClassName = 'flag'; break;
       case 'discussion': typeClassName = 'comments'; break;
-      case 'story': typeClassName = 'newspaper'; break;      
+      case 'story': typeClassName = 'newspaper'; break;
       case 'journal': typeClassName = 'book'; break;
       case 'card': typeClassName = 'square'; break;
 
