@@ -57,7 +57,7 @@ export default class MessageItem extends Component {
                 {this.props.context == 'card-detail' ? Cards.helpers.renderCardKeySpan(this.props.card, 1) : Cards.helpers.renderCardKeySpan(this.props.card) }
             </div>
             </div>
-            <div className="markdown-content" style={{cursor:'pointer'}} onClick={() => {FlowRouter.go(`/card/${this.props.card._id}`);}}>
+            <div className="markdown-content" style={{cursor:'pointer'}} onClick={this.handleCardSelected.bind(this)}>
             {this.props.card.title && this.props.card.title.length > 0 ?
             <div className="ui transparent fluid input">
               <h1 className="title">{this.props.card.title}</h1>
@@ -92,6 +92,20 @@ export default class MessageItem extends Component {
     Meteor.call('cards.updateType', this.props.card._id, newType);
   }
 
+  handleCardSelected() {
+    Meteor.call('cards.getDefaultTab', this.props.card._id, function(err, defaultTab) {
+      if(err) {
+        alert(err.reason);
+      } else {
+        if(defaultTab == null) {
+          FlowRouter.go(`/card/${this.props.card._id}`);
+        } else {
+          FlowRouter.go(`/card/${this.props.card._id}?query=${encodeURIComponent(defaultTab.query)}`);
+        }
+      }
+    }.bind(this));
+  }
+
   renderHashtags() {
     let hashtags = this.props.hashtags.filter( hashtag => hashtag.cardId === this.props.card._id);
     return hashtags.map((hashtag) => (
@@ -113,4 +127,6 @@ export default class MessageItem extends Component {
       }
     }
   }
+
+
 }

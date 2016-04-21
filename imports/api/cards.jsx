@@ -119,7 +119,7 @@ Meteor.methods({
       });
       if(cardId != null) {
         let allTabOptions = {showMessageBox: true, showCreateButton:true, messageButtonLabel:'Add Message', createButtonLabel:'Create'};
-        let commentTabOptions = {showMessageBox: true, showCreateButton:false, messageButtonLabel:'Add Comment', createButtonLabel:'Create'};        
+        let commentTabOptions = {showMessageBox: true, showCreateButton:false, messageButtonLabel:'Add Comment', createButtonLabel:'Create'};
 
         Tabs.insert({cardId,title:'All',type:'normal',description:'', icon:'circle',query:'', tabOptions: allTabOptions, userId: Meteor.userId(), username: Meteor.user().username, createdAt: now,updatedAt: now});
         Tabs.insert({cardId,title:'Comments',type:'normal',description:'', icon:'comments',query:'type:comment', tabOptions: commentTabOptions, userId: Meteor.userId(),username: Meteor.user().username, createdAt: now,updatedAt: now});
@@ -196,6 +196,16 @@ Meteor.methods({
       }
 
       Cards.update(cardId, { $set: { type, updatedAt: new Date() } });
+  },
+
+  'cards.getDefaultTab'(cardId) {
+    let tab = null;
+    const tabs = Tabs.find({cardId}, {sort: {createdAt:1}}).fetch();
+    if(tabs.length > 0) {
+      tab = tabs[0];
+    }
+    console.log("default tab: " + JSON.stringify(tab, null, 2));
+    return tab;
   }
 
 });

@@ -50,7 +50,6 @@ class CardDetailPage extends Component {
     $('.card-detail-dropdown').dropdown('refresh');
     let searchInput = ReactDOM.findDOMNode(this.refs.searchInput);
     searchInput.value=this.props.query;
-    console.log("componentDidUpdate searchInput is: " + searchInput.value);
   }
 
   render() {
@@ -116,8 +115,8 @@ class CardDetailPage extends Component {
               <div className="right menu">
                 {this.renderCreateButton()}
                 <div className="item">
-                  <div className="ui icon mini input">
-                    <input ref="searchInput" type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
+                  <div className="ui icon small input">
+                    <input ref="searchInput" type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..." />
                     <i className="search link icon"></i>
                   </div>
                 </div>
@@ -147,7 +146,7 @@ class CardDetailPage extends Component {
       if(tabOptions.showCreateButton === true) {
         return (
           <div className="item">
-            <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""} className="ui mini teal button" style={{fontSize:'0.8em'}}><i className="plus icon"></i> {tabOptions.createButtonLabel}</a>
+            <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""} className="ui small teal button" style={{fontSize:'0.9em'}}><i className="plus icon"></i> {tabOptions.createButtonLabel}</a>
           </div>
         );
       }
@@ -187,9 +186,29 @@ class CardDetailPage extends Component {
     }
 
     renderMessageItems() {
-      return this.props.messageCards.map((card) => (
-        <MessageItem context="card-detail" hashtags={this.props.hashtags} key={card._id} card={card}/>
-      ));
+      if(this.props.messageCards.length == 0) {
+        return (
+          <h2 className="ui center aligned icon disabled header" style={{marginTop:'40px', width:'380px'}}>
+              <i className="circular warning outline icon"></i>
+              There is nothing to show here yet!
+              <small style={{fontSize:"14px"}}>
+                {this.getCurrentTab().tabOptions.showMessageBox?
+                <p>You can add messages directly using the message box below or click <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""}>here</a> to create different types of card such as a task for example.</p>
+                  :
+                  <p> Click <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""}>here</a> to create a new card.
+                  </p>
+                  }
+              </small>
+
+
+          </h2>
+
+        )
+      } else {
+        return this.props.messageCards.map((card) => (
+          <MessageItem context="card-detail" hashtags={this.props.hashtags} key={card._id} card={card}/>
+        ));
+      }
     }
 
     renderMembers() {
