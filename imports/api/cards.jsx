@@ -104,11 +104,12 @@ Meteor.methods({
       username: Meteor.user().username
     });
     //Update the parent card when a child is added so it appears at the top home list - but earlier than the newly added innercard, hence the need to tweak the date a bit ;-)
-    if( cardId != null && parentCardId != null) {
+    //UPDATE: Decided to not do this for now to see if it's better without it. 
+    /*if( cardId != null && parentCardId != null) {
         let parentUpdatedAt = new Date(now.getTime() - 5);
         console.log("-- updating parent card with timestamp of " + parentUpdatedAt);
         Cards.update(parentCardId, { $set: {updatedAt: parentUpdatedAt}});
-    }
+    }*/
     //If this is an outercard, then add the owner as a member.
     if(cardId != null && parentCardId == null) {
       Members.insert({
@@ -183,7 +184,7 @@ Meteor.methods({
     }
 
     var card = Cards.findOne(cardId);
-    if(card.owner !== this.userId) {
+    if(card.userId !== this.userId) {
       throw new Meteor.Error('not-authorized', 'Only the owner of the card can delete it');
     }
 

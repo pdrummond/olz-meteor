@@ -67,7 +67,7 @@ class CardDetailPage extends Component {
                   <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                   {this.props.currentCard.parentCardId == null ? <div className="item" onClick={this.handleChangeCardKeyClicked.bind(this)}>Change Card Key</div> : ''}
                   <div className="divider"></div>
-                  <div className="item">Delete Card</div>
+                  <div className="item" onClick={this.handleDeleteCardClicked.bind(this)}>Delete Card</div>
                   <div className="divider"></div>
                   <div className="header" style={{fontSize:'12px'}}>ADD MEMBER</div>
                   <div className="ui left huge labeled input">
@@ -81,7 +81,7 @@ class CardDetailPage extends Component {
                     <div className="item">Archive Card</div>
                     <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                     <div className="divider"></div>
-                    <div className="item">Delete Card</div>
+                    <div className="item" onClick={this.handleDeleteCardClicked.bind(this)}>Delete Card</div>
                   </div>
                 }
 
@@ -306,6 +306,18 @@ class CardDetailPage extends Component {
                 alert(err.reason);
             }
         }.bind(this));
+      }
+    }
+
+    handleDeleteCardClicked() {
+      if(confirm("Are you sure you want to delete this card?")) {
+        Meteor.call('cards.remove', this.props.currentCard._id, function(err) {
+          if(err) {
+            alert("Error deleting card: " + err.reason);
+          } else {
+            FlowRouter.go('/');
+          }
+        });
       }
     }
   }
