@@ -7,7 +7,7 @@ const DEFAULT_DETAIL_CARDS_LIMIT = 30;
 
 export default SearchUtils = {
   getFilterQuery(filterString) {
-    console.log("> getFilterQuery");
+    //console.log("> getFilterQuery");
     let hashtags = [];
     var filter = {};
     var remainingText = filterString;
@@ -17,8 +17,8 @@ export default SearchUtils = {
     while (match != null) {
       var field = match[1].trim();
       var value = match.length > 2 && match[2] != null ? match[2].trim().replace(':', '') : null;
-      console.log("-- field: " + field);
-      console.log("-- value: " + value);
+      //console.log("-- field: " + field);
+      //console.log("-- value: " + value);
       //We want to remove the match from the remaining text if its a hashtags or a key:value pair.
       if(field.startsWith('#') || value != null) {
         remainingText = remainingText.replace(field, '');
@@ -53,13 +53,13 @@ export default SearchUtils = {
     if(remainingText && remainingText.trim().length > 0) {
       filter["$or"] = [{title: {$regex:remainingText}}, {content: {$regex:remainingText}}];
     }
-    console.log("getFilterQuery: Current client-side item filter is: " + JSON.stringify(filter));
+    //console.log("getFilterQuery: Current client-side item filter is: " + JSON.stringify(filter));
     let result = {
       filter,
       hashtags
     }
-    console.log(" -- result:" + JSON.stringify(result, null, 2));
-    console.log("< getFilterQuery");
+    //console.log(" -- result:" + JSON.stringify(result, null, 2));
+    //console.log("< getFilterQuery");
     return result;
   },
 
@@ -68,7 +68,7 @@ export default SearchUtils = {
       ? { limit: (opts.limit || DEFAULT_FEED_CARDS_LIMIT), sort: { updatedAt: -1 } }
       : { limit: (opts.limit || DEFAULT_DETAIL_CARDS_LIMIT), sort: { createdAt: 1 } });*/
     var findOpts = (pubType == 'homeCards'
-        ? { sort: { updatedAt: -1 } }
+        ? { limit: (opts.limit || DEFAULT_FEED_CARDS_LIMIT), sort: { updatedAt: -1 } }
         : { sort: { createdAt: 1 } });
     opts.filter = opts.filter || {};
     let allowedCardIds = null;
