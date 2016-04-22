@@ -64,7 +64,7 @@ export default SearchUtils = {
     var sort = (pubType == 'homeCards' ? { sort: { updatedAt: -1 } } : { sort: { createdAt: 1 } });
     opts.filter = opts.filter || {};
     let allowedCardIds = null;
-    console.log("userId: " + userId);
+    //console.log("userId: " + userId);
     //Firstly, we check if there are any hashtags to filter on and build a list of allowed card
     if(!_.isEmpty(opts.hashtags)) {
       allowedCardIds = [];
@@ -89,7 +89,7 @@ export default SearchUtils = {
       });
     });
 
-    console.log("cardIds: " + JSON.stringify(cardIds));
+    //console.log("cardIds: " + JSON.stringify(cardIds));
     opts.filter._id = {$in: cardIds};
     //console.log("FILTER:" + JSON.stringify(opts.filter));
     return Cards.find(opts.filter, sort);

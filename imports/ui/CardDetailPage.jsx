@@ -12,8 +12,6 @@ import { Members } from '../api/members';
 import MessageBox from './MessageBox';
 import MessageItem from './MessageItem';
 import TabItem from './TabItem';
-import MemberItem from './MemberItem';
-
 import MarkdownUtils from '../utils/MarkdownUtils';
 import SearchUtils from '../utils/SearchUtils';
 
@@ -54,18 +52,21 @@ class CardDetailPage extends Component {
 
   render() {
     return (
-      <div id="card-detail-page" className={this.props.loading==false && this.props.currentCard.parentCardId==null?"outercard full-height":"innercard full-height"}>
+      <div id="card-detail-page" className={this.props.loading==false && this.props.card.parentCardId==null?"outercard full-height":"innercard full-height"}>
         <div id="card-detail-page-segment" className={this.props.loading?"ui vertical loading segment full-height":"ui vertical segment full-height"} style={{padding:'0px'}}>
-          <div className="ui fluid card ols-card-detail">
+          <div className="ui feed" style={{marginBottom:'0px'}}>
+          {!this.props.loading? <MessageItem context="card-detail-item" hashtags={this.props.hashtags} members={this.props.members} users={this.props.users} key={this.props.card._id} card={this.props.card}/>:''}
+          </div>
+          {/*}<div className="ui fluid card ols-card-detail">
             <div className="content" style={{padding:'10px 20px'}}>
               <div className="ui right floated icon top left pointing card-detail-dropdown dropdown mini basic button">
                 <i className="vertical ellipsis icon"></i>
-                {!this.props.loading && this.props.currentCard.parentCardId == null ?
+                {!this.props.loading && this.props.card.parentCardId == null ?
                 <div className="menu">
-                  <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
-                  <div onClick={this.handleToggleOpenClicked.bind(this)} className="item">{!this.props.loading && this.props.currentCard.isOpen?"Close Card":"Reopen Card"}</div>
+                  <a href={!this.props.loading?`/card/${this.props.card._id}/edit`:''} className="item">Edit Card</a>
+                  <div onClick={this.handleToggleOpenClicked.bind(this)} className="item">{!this.props.loading && this.props.card.isOpen?"Close Card":"Reopen Card"}</div>
                   <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
-                  {this.props.currentCard.parentCardId == null ? <div className="item" onClick={this.handleChangeCardKeyClicked.bind(this)}>Change Card Key</div> : ''}
+                  {this.props.card.parentCardId == null ? <div className="item" onClick={this.handleChangeCardKeyClicked.bind(this)}>Change Card Key</div> : ''}
                   <div className="divider"></div>
                   <div className="item" onClick={this.handleSetAssigneeClicked.bind(this)}>Set Assignee</div>
                   <div className="item" onClick={this.handleAssignToMeClicked.bind(this)}>Assign to Me</div>
@@ -82,8 +83,8 @@ class CardDetailPage extends Component {
                 </div>
                     :
                   <div className="menu">
-                    <a href={!this.props.loading?`/card/${this.props.currentCard._id}/edit`:''} className="item">Edit Card</a>
-                    <div onClick={this.handleToggleOpenClicked.bind(this)} className="item">{!this.props.loading && this.props.currentCard.isOpen?"Close Card":"Reopen Card"}</div>
+                    <a href={!this.props.loading?`/card/${this.props.card._id}/edit`:''} className="item">Edit Card</a>
+                    <div onClick={this.handleToggleOpenClicked.bind(this)} className="item">{!this.props.loading && this.props.card.isOpen?"Close Card":"Reopen Card"}</div>
                     <div className="item" onClick={this.handleMoveCardClicked.bind(this)}>Move Card</div>
                       <div className="divider"></div>
                       <div className="item" onClick={this.handleSetAssigneeClicked.bind(this)}>Set Assignee</div>
@@ -97,25 +98,25 @@ class CardDetailPage extends Component {
 
               </div>
 
-              <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.currentCard)} style={{width:'1.5em', height:'1.5em'}}/>
+              <img className="ui avatar image" src={Cards.helpers.getUserProfileImage(this.props.card)} style={{width:'1.5em', height:'1.5em'}}/>
               {!this.props.loading?
                 <span className="card-header-label">
-                  <i className={Cards.helpers.getCardTypeIconClassName(this.props.currentCard.type)} style={{position:'relative', top:'1px', marginLeft:'10px', color:Cards.helpers.getCardTypeIconColor(this.props.currentCard.type), fontSize:'16px'}}></i>
-                  <span className="user-fullname-label">@{this.props.currentCard.username}</span>
-                  <span className="date" style={{marginLeft:'5px'}}>{moment(this.props.currentCard.createdAt).fromNow()}</span>
-                  {this.props.currentCard.isOpen == false ? <span className="ui mini label" style={{marginLeft:'5px'}}>CLOSED</span> : ''}
+                  <i className={Cards.helpers.getCardTypeIconClassName(this.props.card.type)} style={{position:'relative', top:'1px', marginLeft:'10px', color:Cards.helpers.getCardTypeIconColor(this.props.card.type), fontSize:'16px'}}></i>
+                  <span className="user-fullname-label">@{this.props.card.username}</span>
+                  <span className="date" style={{marginLeft:'5px'}}>{moment(this.props.card.createdAt).fromNow()}</span>
+                  {this.props.card.isOpen == false ? <span className="ui mini label" style={{marginLeft:'5px'}}>CLOSED</span> : ''}
                   {this.renderAssignee()}
-                  {Cards.helpers.renderCardKeySpan(this.props.currentCard)}
+                  {Cards.helpers.renderCardKeySpan(this.props.card)}
                 </span>:''}
               </div>
               <div className="content" style={{padding: '0px 20px 10px 20px', borderTop:'none'}}>
                 <div id="card-detail-content" className={this.state.longFormMode?"longform description markdown-content":"description markdown-content"}>
                   <div className="ui transparent fluid input">
-                    <h1 className="title">{!this.props.loading?this.props.currentCard.title:""}</h1>
+                    <h1 className="title">{!this.props.loading?this.props.card.title:""}</h1>
                   </div>
                   {!this.props.loading?<div dangerouslySetInnerHTML={this.getCardContent()}></div>:""}
-                  {!this.props.loading && this.props.currentCard.content.length > MAX_CONTENT_LENGTH && !this.state.longFormMode ? <a className="read-more" href="" onClick={() => {this.setState({longFormMode:true})}}><i className="expand icon"></i> Read More...</a> : ''}
-                  {!this.props.loading && this.props.currentCard.content.length > MAX_CONTENT_LENGTH && this.state.longFormMode ? <a className="read-less" href="" onClick={() => {this.setState({longFormMode:false})}}><i className="compress icon"></i> Read Less...</a> : ''}
+                  {!this.props.loading && this.props.card.content.length > MAX_CONTENT_LENGTH && !this.state.longFormMode ? <a className="read-more" href="" onClick={() => {this.setState({longFormMode:true})}}><i className="expand icon"></i> Read More...</a> : ''}
+                  {!this.props.loading && this.props.card.content.length > MAX_CONTENT_LENGTH && this.state.longFormMode ? <a className="read-less" href="" onClick={() => {this.setState({longFormMode:false})}}><i className="compress icon"></i> Read Less...</a> : ''}
                 </div>
               </div>
               <div className="extra content footer">
@@ -123,8 +124,8 @@ class CardDetailPage extends Component {
                   {this.renderMembers()}
                 </div>
               </div>
-            </div>
-            <div className="ui secondary pointing small menu" style={{padding:'0px', margin:'0px'}}>
+            </div>*/}
+            <div className="ui secondary pointing small menu" style={{backgroundColor:'whitesmoke', padding:'0px', margin:'0px'}}>
               {this.renderTabs()}
               <div className="right menu">
                 {this.renderCreateButton()}
@@ -146,7 +147,7 @@ class CardDetailPage extends Component {
               </div>
             </div>
 
-            <div id="message-list" ref="messageList" className="ui feed" style={{height: this.getCurrentTab().tabOptions.showMessageBox===true?'calc(100% - 271px)':'calc(100% - 150px)'}}>
+            <div id="message-list" ref="messageList" className="ui feed" style={{height: this.getCurrentTab().tabOptions.showMessageBox===true?'calc(100% - 275px)':'calc(100% - 150px)'}}>
               {this.renderMessageItems()}
             </div>
             {this.renderMessageBox()}
@@ -160,7 +161,7 @@ class CardDetailPage extends Component {
       if(tabOptions.showCreateButton === true) {
         return (
           <div className="item">
-            <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""} className="ui small teal button" style={{fontSize:'0.9em'}}><i className="plus icon"></i> {tabOptions.createButtonLabel}</a>
+            <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.card._id}`:""} className="ui small teal button" style={{fontSize:'0.9em'}}><i className="plus icon"></i> {tabOptions.createButtonLabel}</a>
           </div>
         );
       }
@@ -175,7 +176,7 @@ class CardDetailPage extends Component {
           );
         } else {
           return (
-            <MessageBox card={this.props.currentCard} onMessageCreated={this.scrollBottom.bind(this)}/>
+            <MessageBox card={this.props.card} onMessageCreated={this.scrollBottom.bind(this)}/>
           );
         }
       }
@@ -187,9 +188,9 @@ class CardDetailPage extends Component {
 
     getCardContent() {
       if(this.state.longFormMode) {
-        return MarkdownUtils.markdownToHTML(this.props.currentCard.content);
+        return MarkdownUtils.markdownToHTML(this.props.card.content);
       } else {
-        return MarkdownUtils.markdownToHTML( prune(this.props.currentCard.content, MAX_CONTENT_LENGTH));
+        return MarkdownUtils.markdownToHTML( prune(this.props.card.content, MAX_CONTENT_LENGTH));
       }
     }
 
@@ -207,9 +208,9 @@ class CardDetailPage extends Component {
               There is nothing to show here yet!
               <small style={{fontSize:"14px"}}>
                 {this.getCurrentTab().tabOptions.showMessageBox?
-                <p>You can add messages directly using the message box below or click <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""}>here</a> to create different types of card such as a task for example.</p>
+                <p>You can add messages directly using the message box below or click <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.card._id}`:""}>here</a> to create different types of card such as a task for example.</p>
                   :
-                  <p> Click <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.currentCard._id}`:""}>here</a> to create a new card.
+                  <p> Click <a href={!this.props.loading?`/cards/create?parentCardId=${this.props.card._id}`:""}>here</a> to create a new card.
                   </p>
                   }
               </small>
@@ -220,32 +221,13 @@ class CardDetailPage extends Component {
         )
       } else {
         return this.props.messageCards.map((card) => (
-          <MessageItem context="card-detail" hashtags={this.props.hashtags} key={card._id} card={card}/>
+          <MessageItem context="innercard" hashtags={this.props.hashtags} key={card._id} card={card}/>
         ));
       }
     }
 
-    renderMembers() {
-      return this.props.members.map((member) => (
-        <MemberItem key={member._id} member={member}/>
-      ));
-    }
-
     handleNewTabClicked() {
-      FlowRouter.go(`/card/${this.props.currentCard._id}/tab/create`);
-    }
-
-    handleMoveCardClicked() {
-      Meteor.call('cards.getHandle', this.props.currentCard.parentCardId, function(err, handle) {
-        let newParentHandle = prompt("Enter handle of card to move this card to (i.e #OLS-42): ", handle);
-        if(newParentHandle != null) {
-          Meteor.call('cards.move', this.props.currentCard._id, newParentHandle, function(err) {
-            if(err) {
-              alert("Error moving card: " + err.reason);
-            }
-          });
-        }
-      }.bind(this));
+      FlowRouter.go(`/card/${this.props.card._id}/tab/create`);
     }
 
     getCurrentTab() {
@@ -308,90 +290,9 @@ class CardDetailPage extends Component {
         clearTimeout(this.searchInputKeyTimer);
       }
       this.searchInputKeyTimer = setTimeout(function() {
-        FlowRouter.go('cardDetailPage', {cardId: this.props.currentCard._id}, {'query': encodeURIComponent(e.target.value)});
+        FlowRouter.go('cardDetailPage', {cardId: this.props.card._id}, {'query': encodeURIComponent(e.target.value)});
       }.bind(this), 500);
     }
-
-    onMemberKeyDown(event) {
-      if (event.keyCode === 13 && event.shiftKey == false) {
-        let username = event.target.value.trim().replace('@', '');
-        if(username.length > 0) {
-          Meteor.call('members.insert', username, this.props.currentCard._id, function(err) {
-              if(err) {
-                  alert("Error adding member: " + err.reason);
-              } else {
-                  this.refs.memberInput.value = '';
-              }
-          }.bind(this));
-        }
-      }
-    }
-
-    handleChangeCardKeyClicked() {
-      var key = prompt("Enter key", this.props.currentCard.key);
-      if(key != null) {
-        Meteor.call('cards.updateKey', this.props.currentCard._id, key, function(err) {
-            if(err) {
-                alert(err.reason);
-            }
-        }.bind(this));
-      }
-    }
-
-    handleRemoveFavouriteClicked() {
-      Meteor.call('favourites.remove', this.props.currentCard._id, function(err) {
-        if(err) {
-          alert("Error removing favourite: " + err.reason);
-        }
-      });
-    }
-
-    handleToggleOpenClicked() {
-      Meteor.call('cards.toggleOpen', this.props.currentCard._id, function(err) {
-        if(err) {
-          alert("Error opening/closing card: " + err.reason);
-        }
-      });
-    }
-
-    handleAssignToMeClicked() {
-        Meteor.call('cards.updateAssignee', this.props.currentCard._id, Meteor.user().username);
-    }
-
-    handleRemoveAssigneeClicked() {
-        Meteor.call('cards.removeAssignee', this.props.currentCard._id);
-    }
-
-    handleSetAssigneeClicked() {
-        let assignee = prompt("Enter assignee username:");
-        if(assignee && assignee.trim().length > 0) {
-            assignee = assignee.trim();
-            Meteor.call('cards.updateAssignee', this.props.currentCard._id, assignee);
-        }
-    }
-
-    handleDeleteCardClicked() {
-      if(confirm("Are you sure you want to delete this card?")) {
-        Meteor.call('cards.remove', this.props.currentCard._id, function(err) {
-          if(err) {
-            alert("Error deleting card: " + err.reason);
-          } else {
-            FlowRouter.go('/');
-          }
-        });
-      }
-    }
-
-    renderAssignee() {
-      if(this.props.currentCard.assignee) {
-        var assigneeUser = Meteor.users.findOne({username:this.props.currentCard.assignee});
-        return (
-          <img title={"Assigned to @" + this.props.currentCard.assignee} style={{position:'relative', top:'2px', left: '5px', width:'1.3em', height:'1.3em', borderRadius:'10px'}} src={assigneeUser.profileImage}/>
-        );
-      }
-    }
-
-
   }
 
   export default createContainer(() => {
@@ -413,7 +314,7 @@ class CardDetailPage extends Component {
 
     var data = {
       loading: !(cardHandle.ready() && messageCardsHandle.ready() && hashtagsHandle.ready() && tabsHandle.ready() && membersHandle.ready()),
-      currentCard: Cards.findOne(cardId),
+      card: Cards.findOne(cardId),
       messageCards: SearchUtils.filterCards(Meteor.userId(), querySelector, 'messageCards').fetch(),
       hashtags: Hashtags.find().fetch(),
       tabs: Tabs.find().fetch(),

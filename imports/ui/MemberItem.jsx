@@ -20,7 +20,7 @@ export default class MemberItem extends Component {
     if(this.props.member.role == 'owner') {
       return (
         <div className="ui icon right pointing member-item-dropdown dropdown mini basic button">
-          <img className="ui avatar image" src={Members.helpers.getUserProfileImage(this.props.member)} style={{width:'1em', height:'1em'}}/>
+          <img className="ui avatar image" src={Members.helpers.getUserProfileImage(this.props.member)}/>
           <div className="menu">
             <div className="header" style={{fontSize:'12px'}}>@{this.props.member.username} <span style={{color:'lightgray'}}>({this.props.member.role.toUpperCase()})</span></div>
             <div className="divider"></div>
@@ -31,7 +31,7 @@ export default class MemberItem extends Component {
     } else {
       return (
         <div className="ui icon right pointing member-item-dropdown dropdown mini basic button">
-          <img className="ui avatar image" src={Members.helpers.getUserProfileImage(this.props.member)}  style={{width:'1em', height:'1em'}}/>
+          <img className="ui avatar image" src={Members.helpers.getUserProfileImage(this.props.member)}/>
           <div className="menu">
             <div className="header" style={{fontSize:'12px'}}>@{this.props.member.username} <span style={{color:'lightgray'}}>({this.props.member.role.toUpperCase()})</span></div>
             <div className="divider"></div>
