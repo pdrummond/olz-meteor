@@ -68,14 +68,13 @@ export default class MessageBox extends Component {
         const type = 'comment'; //message cards always default to comments.
         const content = this.state.content.trim();
         if(content.length > 0) {
-            Meteor.call('cards.insert', title, content, type, this.props.card._id, function(err) {
-                if(err) {
-                    alert("Error adding message card: " + err.reason);
-                } else {
-                    this.setState({content: ''});
-                    this.props.onMessageCreated();
-                }
-            }.bind(this));
+          this.setState({content: ''});
+          //this.props.onMessageCreated();
+          Meteor.call('cards.insert', title, content, type, this.props.card._id, function(err) {
+              if(err) {
+                  alert("Error adding message card: " + err.reason);
+              }
+          }.bind(this));
         }
     }
 

@@ -12,21 +12,64 @@ export const Cards = new Mongo.Collection('Cards');
 
 if (Meteor.isServer) {
   Meteor.publish('homeCards', function(opts) {
+    console.log("PUBLICATION: homeCards");
     return SearchUtils.filterCards(this.userId, opts, 'homeCards');
   });
 
   Meteor.publish('messageCards', function(opts) {
-    return SearchUtils.filterCards(this.userId, opts, 'messagesCards');
+    console.log("PUBLICATION: messageCards");
+    var findOpts = { limit: (opts.limit || 10), sort: { createdAt: -1}};
+    opts.filter = opts.filter || {};
+    let allowedCardIds = null;
+    //console.log("userId: " + userId);
+    //Firstly, we check if there are any hashtags to filter on and build a list of allowed card
+    if(!_.isEmpty(opts.hashtags)) {
+      allowedCardIds = [];
+      Hashtags.find({name: {$in: opts.hashtags}}).forEach(function (hashtag) {
+        let card = Cards.findOne(hashtag.cardId);
+        if(card != null) {
+          allowedCardIds.push(card._id);
+        }
+      });
+    }
+    //Now we build up a list of cards that the user is allowed to see based on membership
+    //(and only add them if they are already in the allowedCardIds)
+    let cardIds = [];
+    Members.find({userId:this.userId}).forEach(function (member) {
+      let cards = Cards.find({outerCardId: member.cardId}).fetch();
+      cards.forEach((card) => {
+        if(allowedCardIds == null) {
+          cardIds.push(card._id);
+        } else if(_.contains(allowedCardIds, card._id)) {
+          cardIds.push(card._id);
+        }
+      });
+    });
+
+    //console.log("cardIds: " + JSON.stringify(cardIds));
+    opts.filter._id = {$in: cardIds};
+    console.log("messageCards filter: " + JSON.stringify(opts.filter));
+    console.log("messageCards message opts: " + JSON.stringify(findOpts));
+
+    var cardsx = Cards.find(opts.filter, findOpts);
+
+    console.log("Num cards: " + cardsx.fetch().length);
+    console.log("FIRST CARD:" + JSON.stringify(cardsx.fetch()[0]));
+
+    return cardsx;
+    //return Cards.find({parentCardId: opts.filter.parentCardId}, { limit: opts.limit, sort: { createdAt: -1}});
   });
 
   //Publish card and all its children
   Meteor.publish('currentCard', function(cardId) {
-    var card = Cards.findOne(cardId);
+    console.log("PUBLICATION: currentCard");
+    /*var card = Cards.findOne(cardId);
     if(card) {
       return Cards.find({outerCardId: card.outerCardId});
     } else {
       this.ready();
-    }
+    }*/
+    return Cards.find({_id: cardId});
   });
 }
 

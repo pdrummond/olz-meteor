@@ -141,10 +141,12 @@ export default class MessageItem extends Component {
     }
 
     renderHashtags() {
-      let hashtags = this.props.hashtags.filter( hashtag => hashtag.cardId === this.props.card._id);
-      return hashtags.map((hashtag) => (
-        <HashtagLabel key={hashtag._id} hashtag={hashtag}/>
-      ));
+      if(this.props.hashtags) {
+        let hashtags = this.props.hashtags.filter( hashtag => hashtag.cardId === this.props.card._id);
+        return hashtags.map((hashtag) => (
+          <HashtagLabel key={hashtag._id} hashtag={hashtag}/>
+        ));
+      }
     }
 
     onHashtagKeyDown(event) {

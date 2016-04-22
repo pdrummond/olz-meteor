@@ -3,7 +3,7 @@ import { Hashtags } from '../api/hashtags';
 import { Members } from '../api/members';
 
 const DEFAULT_FEED_CARDS_LIMIT = 10;
-const DEFAULT_DETAIL_CARDS_LIMIT = 30;
+const DEFAULT_DETAIL_CARDS_LIMIT = 10;
 
 export default SearchUtils = {
   getFilterQuery(filterString) {
@@ -69,7 +69,42 @@ export default SearchUtils = {
       : { limit: (opts.limit || DEFAULT_DETAIL_CARDS_LIMIT), sort: { createdAt: 1 } });*/
     var findOpts = (pubType == 'homeCards'
         ? { limit: (opts.limit || DEFAULT_FEED_CARDS_LIMIT), sort: { updatedAt: -1 } }
-        : { sort: { createdAt: 1 } });
+        : { limit: (opts.limit || DEFAULT_DETAIL_CARDS_LIMIT), sort: { createdAt: 1 } });
+    opts.filter = opts.filter || {};
+    let allowedCardIds = null;
+    //console.log("userId: " + userId);
+    //Firstly, we check if there are any hashtags to filter on and build a list of allowed card
+    if(!_.isEmpty(opts.hashtags)) {
+      allowedCardIds = [];
+      Hashtags.find({name: {$in: opts.hashtags}}).forEach(function (hashtag) {
+        let card = Cards.findOne(hashtag.cardId);
+        if(card != null) {
+          allowedCardIds.push(card._id);
+        }
+      });
+    }
+    //Now we build up a list of cards that the user is allowed to see based on membership
+    //(and only add them if they are already in the allowedCardIds)
+    let cardIds = [];
+    Members.find({userId}).forEach(function (member) {
+      let cards = Cards.find({outerCardId: member.cardId}).fetch();
+      cards.forEach((card) => {
+        if(allowedCardIds == null) {
+          cardIds.push(card._id);
+        } else if(_.contains(allowedCardIds, card._id)) {
+          cardIds.push(card._id);
+        }
+      });
+    });
+
+    //console.log("cardIds: " + JSON.stringify(cardIds));
+    opts.filter._id = {$in: cardIds};
+    //console.log("FILTER:" + JSON.stringify(opts.filter));
+    return Cards.find(opts.filter, findOpts);
+  },
+
+  filterMessageCards(userId, opts) {
+    var findOpts = { sort: { createdAt: 1}};
     opts.filter = opts.filter || {};
     let allowedCardIds = null;
     //console.log("userId: " + userId);

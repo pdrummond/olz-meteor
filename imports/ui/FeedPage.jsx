@@ -221,7 +221,7 @@ export default createContainer((props) => {
     query = "";
   }
   let querySelector = SearchUtils.getFilterQuery(query);
-  querySelector.limit = FeedPage.pageLimit.get(0);
+  querySelector.limit = FeedPage.pageLimit.get();
 
   var cardsHandle = Meteor.subscribe('homeCards', querySelector);
   var hashtagsHandle = Meteor.subscribe('hashtags');
