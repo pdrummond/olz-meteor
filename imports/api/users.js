@@ -1,5 +1,6 @@
 import { Accounts } from 'meteor/accounts-base';
 import {Gravatar} from 'meteor/jparker:gravatar';
+import { Tabs } from '../api/tabs';
 
 if(Meteor.isServer) {
     Meteor.publish("userData", function () {
@@ -27,6 +28,10 @@ Accounts.onCreateUser(function(options, user) {
     if (options.profile) {
         user.profile = options.profile;
     }
+
+    //Add a default user tab.
+    let now = new Date();
+    Tabs.insert({null, title:'All',type:'user',description:'', icon:'circle',query:'', null, userId: user._id, username: user.username, createdAt: now, updatedAt: now});
 
     return user;
 });

@@ -10,6 +10,10 @@ if (Meteor.isServer) {
     return Tabs.find({cardId});
   });
 
+  Meteor.publish('userTabs', function() {
+    return Tabs.find({userId: this.userId, type:'user'});
+  });
+
   Meteor.publish('currentTab', function(tabId) {
     return Tabs.find({_id: tabId});
   });
@@ -24,8 +28,8 @@ Meteor.methods({
     check(description, String);
     check(icon, String);
     check(query, String);
-    check(cardId, String);
-    check(tabOptions, Object);
+    check(cardId, Match.Optional(String));
+    check(tabOptions, Match.Optional(Object));
 
     if (! Meteor.userId()) {
       throw new Meteor.Error('not-authenticated');

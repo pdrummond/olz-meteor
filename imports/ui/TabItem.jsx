@@ -13,9 +13,17 @@ export default class TabItem extends Component {
 
   render() {
     return (
-      <a className={(this.props.query === this.props.tab.query)?"active item":"item"} href={`/card/${this.props.tab.cardId}?query=${encodeURIComponent(this.props.tab.query)}`}>
+      <a className={(this.props.query === this.props.tab.query)?"active item":"item"} href={this.getTabLink()}>
         <i className={this.props.tab.icon + " icon"}></i> {this.props.tab.title}
       </a>
     );
+  }
+
+  getTabLink() {
+    if(this.props.tab.type == 'normal') {
+      return `/card/${this.props.tab.cardId}?query=${encodeURIComponent(this.props.tab.query)}`;
+    } else if(this.props.tab.type == 'user') {
+      return `/?query=${encodeURIComponent(this.props.tab.query)}`;
+    }
   }
 }

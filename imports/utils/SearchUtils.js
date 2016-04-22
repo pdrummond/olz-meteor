@@ -2,6 +2,9 @@ import { Cards } from '../api/cards';
 import { Hashtags } from '../api/hashtags';
 import { Members } from '../api/members';
 
+const DEFAULT_FEED_CARDS_LIMIT = 10;
+const DEFAULT_DETAIL_CARDS_LIMIT = 30;
+
 export default SearchUtils = {
   getFilterQuery(filterString) {
     console.log("> getFilterQuery");
@@ -61,7 +64,12 @@ export default SearchUtils = {
   },
 
   filterCards(userId, opts, pubType) {
-    var sort = (pubType == 'homeCards' ? { sort: { updatedAt: -1 } } : { sort: { createdAt: 1 } });
+    /*var findOpts = (pubType == 'homeCards'
+      ? { limit: (opts.limit || DEFAULT_FEED_CARDS_LIMIT), sort: { updatedAt: -1 } }
+      : { limit: (opts.limit || DEFAULT_DETAIL_CARDS_LIMIT), sort: { createdAt: 1 } });*/
+    var findOpts = (pubType == 'homeCards'
+        ? { sort: { updatedAt: -1 } }
+        : { sort: { createdAt: 1 } });
     opts.filter = opts.filter || {};
     let allowedCardIds = null;
     //console.log("userId: " + userId);
@@ -92,6 +100,6 @@ export default SearchUtils = {
     //console.log("cardIds: " + JSON.stringify(cardIds));
     opts.filter._id = {$in: cardIds};
     //console.log("FILTER:" + JSON.stringify(opts.filter));
-    return Cards.find(opts.filter, sort);
+    return Cards.find(opts.filter, findOpts);
   }
 }

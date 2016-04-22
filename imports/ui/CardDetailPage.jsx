@@ -301,7 +301,7 @@ class CardDetailPage extends Component {
     if(query === "undefined") {
       query = "";
     }
-    console.log("query: " + query);
+
 
     let querySelector = SearchUtils.getFilterQuery(query);
     querySelector.filter.parentCardId = cardId;

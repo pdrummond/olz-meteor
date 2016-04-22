@@ -10,6 +10,7 @@ import CreateCardPage from '../../ui/CreateCardPage.jsx';
 import EditCardPage from '../../ui/EditCardPage.jsx';
 import CardDetailPage from '../../ui/CardDetailPage.jsx';
 import CreateTabPage from '../../ui/CreateTabPage.jsx';
+import CreateUserTabPage from '../../ui/CreateUserTabPage.jsx';
 import EditTabPage from '../../ui/EditTabPage.jsx';
 
 import JoinPage from '../../ui/JoinPage.jsx';
@@ -50,6 +51,16 @@ FlowRouter.route('/card/:cardId', {
         });
     },
 });
+
+FlowRouter.route('/tabs/create', {
+    name: 'createUserTabPage',
+    action() {
+        mount(CreateUserTabPage, {
+            main: () => <CreateTabPage/>
+        });
+    },
+});
+
 
 FlowRouter.route('/card/:cardId/tab/create', {
     name: 'createTabPage',

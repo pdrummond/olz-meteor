@@ -7,7 +7,8 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Cards } from '../api/cards';
 import { Hashtags } from '../api/hashtags';
-
+import { Tabs } from '../api/tabs';
+import TabItem from './TabItem';
 import MessageItem from './MessageItem';
 import SearchUtils from '../utils/SearchUtils';
 
@@ -23,6 +24,8 @@ class FeedPage extends Component {
 
   componentDidUpdate() {
     $('.feed-page-dropdown').dropdown('refresh');
+    let feedSearchInput = ReactDOM.findDOMNode(this.refs.feedSearchInput);
+    feedSearchInput.value=this.props.query;
   }
 
   renderCards() {
@@ -54,26 +57,17 @@ class FeedPage extends Component {
         <div id="feed-page-wrapper" className="container">
           {/*<LeftSidebar homeSection={this.props.homeSection} groupFilterId={this.props.groupFilterId} groups={this.props.groups}/>*/}
           <div>
-            <div className="ui secondary menu">
+            <div className="ui secondary menu" style={{marginBottom:'0px'}}>
               <div className="header item">
                 <h1 style={{color:'#f0ad4e'}}><i className="home icon"></i></h1>
               </div>
               <div className="item" style={{flexGrow:1}}>
                 <div className="ui icon input">
-                  <input type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
+                  <input ref="feedSearchInput" type="text" onKeyDown={this.handleSearchKeyDown.bind(this)} placeholder="Search..."/>
                   <i className="search icon"></i>
                 </div>
               </div>
               <div className="right menu">
-                <div className="ui feed-page-dropdown dropdown item">
-                  All Users <i className="dropdown icon"></i>
-                <div className="menu">
-                  <a className="item">@pdrummond</a>
-                  <a className="item">@harold</a>
-                  <div className="divider"></div>
-                  <a className="item">All Users</a>
-                </div>
-              </div>
                 <div className="item">
                   <div className="ui teal buttons">
                     <a href="/cards/create" className="ui teal button"><i className="plus icon"></i> Create</a>
@@ -89,6 +83,20 @@ class FeedPage extends Component {
                     </div>
                   </div>
 
+                </div>
+              </div>
+            </div>
+            <div className="ui secondary right pointing small menu" style={{padding:'0px', margin:'0px'}}>
+              {this.renderTabs()}
+              <div className="right menu">
+                <div className="ui feed-page-dropdown dropdown item">
+                  <i className="vertical ellipsis icon"></i>
+                  <div className="menu">
+                    <a className="item" onClick={this.handleEditTabClicked.bind(this)}>Edit Tab</a>
+                    <div className="divider"></div>
+                    <a className="item" onClick={this.handleNewTabClicked.bind(this)}>New Tab</a>
+                    <a className="item" onClick={this.handleRemoveTabClicked.bind(this)}>Remove Tab</a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -110,7 +118,7 @@ class FeedPage extends Component {
       clearTimeout(this.searchInputKeyTimer);
     }
     this.searchInputKeyTimer = setTimeout(function() {
-      Session.set('query', SearchUtils.getFilterQuery(e.target.value));
+      FlowRouter.go('feedPage', null, {'query': encodeURIComponent(e.target.value)});
     }.bind(this), 500);
   }
 
@@ -152,6 +160,43 @@ class FeedPage extends Component {
       }
     }
   }
+
+  renderTabs() {
+    if(this.props.tabs && this.props.tabs.length > 0) {
+      return this.props.tabs.map((tab) => (
+        <TabItem key={tab._id} tab={tab} selectedTabId={this.props.selectedTabId} query={this.props.query}/>
+      ));
+    }
+  }
+
+  handleNewTabClicked() {
+    FlowRouter.go(`/tabs/create`);
+  }
+
+  handleEditTabClicked() {
+    let tab = this.getCurrentTab();
+    if(tab) {
+      FlowRouter.go(`/tab/${tab._id}/edit`);
+    }
+  }
+
+  handleRemoveTabClicked() {
+    if(confirm("Are you sure you want to remove the current tab?")) {
+      let tab = this.getCurrentTab();
+      if(tab) {
+        Meteor.call('tabs.remove', tab._id, function(err) {
+          if(err) {
+            alert("Error removing tab: " + err.reason);
+          }
+        });
+      }
+    }
+  }
+
+  getCurrentTab() {
+    let tab = _.findWhere(this.props.tabs, {query: this.props.query});
+    return tab;
+  }
 }
 
 FeedPage.propTypes = {
@@ -159,16 +204,22 @@ FeedPage.propTypes = {
 };
 
 export default createContainer((props) => {
-  var query = Session.get('query') || {};
-  console.log("QUERY: " + JSON.stringify(query));
-  var cardsHandle = Meteor.subscribe('homeCards', query);
+  var query = decodeURIComponent(FlowRouter.getQueryParam('query'));
+  if(query === "undefined") {
+    query = "";
+  }
+  let querySelector = SearchUtils.getFilterQuery(query);
+
+  var cardsHandle = Meteor.subscribe('homeCards', querySelector);
   var hashtagsHandle = Meteor.subscribe('hashtags');
+  var tabsHandle = Meteor.subscribe('userTabs');
   var data = {
-    loading: !(cardsHandle.ready() && hashtagsHandle.ready()),
-    currentUser: Meteor.user()
+    loading: !(cardsHandle.ready() && hashtagsHandle.ready() && tabsHandle.ready()),
+    currentUser: Meteor.user(),
+    query
   };
   data.cards = Cards.find({}, { sort: { updatedAt: -1 } }).fetch();
   data.hashtags = Hashtags.find().fetch();
-  console.log("hashtags:" + JSON.stringify(data.hashtags));
+  data.tabs = Tabs.find().fetch();
   return data;
 }, FeedPage);
